@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Sistem
+.DS_Store
+Thumbs.db
+
+# Veri setleri
+veriler/
+data/
+
+# Büyük model dosyaları ve checkpointler
+*.pt
+*.pth
+*.ckpt
+
+# Deneylerin büyük/geçici çıktıları
+sonuclar/ham_veriler/*
+!sonuclar/ham_veriler/.gitkeep
+deneyler/**/checkpoints/
+
+# Geçici dosyalar
+*.tmp
+*.log
+
+# Notebook geçici alanı
+.ipynb_checkpoints/
