@@ -1,0 +1,25 @@
+deney_kodu: DUMAN-CIFAR10-001
+aciklama: "Deney altyapısının baştan sona çalıştığını doğrulayan 2 epoch'luk teknik test."
+
+veri:
+  veri_klasoru: veriler
+  split_dosyasi: ayarlar/cifar10_split.json
+  split_seed: 2026
+  batch_size: 128
+  num_workers: 0
+
+model:
+  mimari: cnn_v1
+  aktivasyon: relu
+
+optimizasyon:
+  algoritma: sgd
+  learning_rate: 0.01
+  weight_decay: 0.0
+
+egitim:
+  seed: 42
+  epoch: 2
+
+cikti:
+  klasor: sonuclar/duman_testi
