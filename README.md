@@ -44,11 +44,12 @@ Bir aktivasyon fonksiyonunun başarısı, birlikte kullanıldığı optimizasyon
 
 İlk kez inceleyen biri için önerilen sıra:
 
-1. `dokumantasyon/01_arastirma_protokolu.md`
-2. `dokumantasyon/02_deney_plani.md`
-3. `dokumantasyon/03_terimler_sozlugu.md`
-4. `dokumantasyon/04_deneylerin_nedenleri.md`
-5. `dokumantasyon/05_tez_sahibi_anlatim_notlari.md`
+1. `dokumantasyon/00_tez_onerisi_uyum_matrisi.md`
+2. `dokumantasyon/01_arastirma_protokolu.md`
+3. `dokumantasyon/02_deney_plani.md`
+4. `dokumantasyon/03_terimler_sozlugu.md`
+5. `dokumantasyon/04_deneylerin_nedenleri.md`
+6. `dokumantasyon/05_tez_sahibi_anlatim_notlari.md`
 
 ## Önemli ilke
 
