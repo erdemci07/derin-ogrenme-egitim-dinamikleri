@@ -58,3 +58,18 @@ Ana deneyler başlamadan önce veri bölünmesi, model mimarisi, seed'ler, öğr
 ## Durum
 
 Şu anda çalışma **deney altyapısının kurulması ve pilot protokolün hazırlanması** aşamasındadır.
+
+
+## Hızlı kurulum
+
+Windows / VS Code üzerinde projeyi ilk kez açarken:
+
+1. `kurulum_windows.cmd` dosyasını çalıştırın.
+2. Kurulum tamamlanınca VS Code Python yorumlayıcısı olarak `.venv\\Scripts\\python.exe` seçin.
+3. İlk altyapı testini şu komutla çalıştırın:
+
+```powershell
+.\\.venv\\Scripts\\python.exe calistir_duman_testi.py
+```
+
+Ayrıntılı açıklama: `dokumantasyon/07_windows_kurulum.md`
