@@ -53,3 +53,16 @@ Bu proje için gerekli paketleri bilgisayardaki diğer Python projelerinden ayı
 İlk duman testi CPU'da da çalışabilir. Ana deneylerin hesaplama yükü daha yüksek olduğu için GPU kullanılacaktır. Kurulum betiği mevcut PyTorch kurulumunun CUDA GPU'yu görüp görmediğini raporlar.
 
 PyTorch'un uygun CUDA sürümü bilgisayardaki NVIDIA sürücüsüne göre değişebildiğinden, GPU kurulumu ana deneylere geçmeden önce ayrıca doğrulanacaktır. Bu aşamada amaç, projenin temel Python ortamını tek komutla kurabilmektir.
+
+
+## PyTorch c10.dll / WinError 126 hatası
+
+Windows'ta PyTorch ilk kez yüklenirken aşağıdakine benzer bir hata görülebilir:
+
+`Error loading c10.dll ... Microsoft Visual C++ Redistributable is not installed`
+
+Bu hata Python kodundan veya tez deneylerinden kaynaklanmaz. PyTorch'un Windows üzerinde ihtiyaç duyduğu Microsoft Visual C++ çalışma zamanının eksik olduğunu gösterir.
+
+`kurulum_windows.cmd` artık bu bileşeni otomatik olarak kontrol eder. Eksikse resmi Microsoft adresinden indirip kurar. Windows yönetici izni (UAC) isteyebilir.
+
+Kurulumdan sonra PyTorch hâlâ aynı DLL hatasını verirse bilgisayarı bir kez yeniden başlatıp `kurulum_windows.cmd` dosyasını tekrar çalıştırın.
