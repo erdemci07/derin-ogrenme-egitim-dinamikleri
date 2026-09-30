@@ -1,0 +1,1 @@
+# derin-ogrenme-egitim-dinamikleri
