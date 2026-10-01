@@ -95,7 +95,3 @@ Tüm 60 koşuyu başlatmak için:
 ```
 
 CPU üzerinde tam pilotun çalıştırılması önerilmez. Ana pilot GPU ortamında çalıştırılmalıdır.
-
-## Tez sahibinin kısa açıklaması
-
-"Optimizerların uygun öğrenme oranı ölçekleri farklı olduğu için ana karşılaştırmadan önce eşit tuning bütçeli bir pilot yaptık. Her optimizer için bir öğrenme oranı seçtik ve daha sonra o değeri bütün aktivasyonlarda sabit tuttuk. Böylece aktivasyonlara ayrı ayrı hiperparametre avantajı sağlamadık."
