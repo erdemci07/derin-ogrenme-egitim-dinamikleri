@@ -100,7 +100,3 @@ Bunlara ek olarak aktivasyonların:
 - sıfıra yakın türev oranı
 
 kaydedilecektir.
-
-## Tez sahibinin kısa anlatımı
-
-"Zincir kuralı nedeniyle aktivasyon türevi sadece bulunduğu katmanı değil, geriye doğru taşınan gradyanı da etkiliyor. Biz bu etkiyi teorik olarak açıklayıp deneylerde doğrudan gradyan normu, aktivasyon dağılımı ve parametre güncellemesi üzerinden ölçeceğiz."
