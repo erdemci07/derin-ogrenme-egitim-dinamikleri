@@ -182,9 +182,9 @@ def ana() -> None:
     print(f"\nKullanılan cihaz: {cihaz}")
 
     if cihaz.type == "cpu":
-        print(
-            "UYARI: 60 x 30 epoch pilot CPU üzerinde çok uzun sürebilir. "
-            "Ana pilot için GPU ortamı önerilir."
+        raise RuntimeError(
+            "LR pilotu CPU modunda baslatilmadi. "
+            "Ana pilot icin CUDA destekli NVIDIA GPU gereklidir."
         )
 
     calisilacak = plan
