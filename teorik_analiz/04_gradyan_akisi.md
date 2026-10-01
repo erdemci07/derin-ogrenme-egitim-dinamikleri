@@ -4,27 +4,27 @@ Derin bir sinir ağında parametre güncellemesi tek bir katmanın yerel davran�
 
 Basitleştirilmiş bir ağda:
 
-[
+$$
 a^{(l)}=f(z^{(l)})
-]
+$$
 
 ve
 
-[
+$$
 z^{(l)}=W^{(l)}a^{(l-1)}+b^{(l)}
-]
+$$
 
 olsun.
 
 Bir önceki katmana aktarılan gradyanın temel yapısı:
 
-[
+$$
 \frac{\partial L}{\partial z^{(l)}}
 =
 \frac{\partial L}{\partial a^{(l)}}
 \odot
 f'(z^{(l)})
-]
+$$
 
 şeklindedir.
 
@@ -44,9 +44,9 @@ Bu tezde yalnız klasik sigmoid/tanh karşılaştırması yapılmadığı için 
 
 ReLU için negatif bölgede:
 
-[
+$$
 f'(x)=0
-]
+$$
 
 olduğundan o nörondan geriye aktarılan yerel gradyan kesilir.
 
@@ -66,29 +66,29 @@ Tezde bu ilişki doğrudan deneysel olarak sınanacaktır.
 
 Ana deneylerde belirli epoch noktalarında sabit bir probe batch üzerinde:
 
-[
+$$
 \lVert g \rVert_2
-]
+$$
 
 global gradyan normu,
 
-[
+$$
 \lVert g_l \rVert_2
-]
+$$
 
 katman bazlı gradyan normu,
 
 ve parametre güncellemesi için:
 
-[
+$$
 \lVert \Delta W \rVert_2
-]
+$$
 
 ile göreli güncelleme:
 
-[
+$$
 \frac{\lVert\Delta W\rVert_2}{\lVert W\rVert_2}
-]
+$$
 
 hesaplanacaktır.
 
