@@ -49,8 +49,6 @@ Bir aktivasyon fonksiyonunun başarısı, birlikte kullanıldığı optimizasyon
 3. `dokumantasyon/02_deney_plani.md`
 4. `dokumantasyon/03_terimler_sozlugu.md`
 5. `dokumantasyon/04_deneylerin_nedenleri.md`
-6. `dokumantasyon/05_tez_sahibi_anlatim_notlari.md`
-
 ## Önemli ilke
 
 Ana deneyler başlamadan önce veri bölünmesi, model mimarisi, seed'ler, öğrenme oranları, eğitim bütçesi ve değerlendirme ölçütleri dondurulacaktır. Ana sonuçlar görüldükten sonra deney koşulları sonuca göre değiştirilmeyecektir.
