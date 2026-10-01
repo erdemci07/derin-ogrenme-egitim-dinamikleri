@@ -87,7 +87,3 @@ Her beklenti için:
 4. uyum yoksa bu da açık biçimde raporlanacaktır.
 
 Teorik bölüm, deney sonucunu zorla doğrulamak için kullanılmayacaktır.
-
-## Tez sahibinin kısa anlatımı
-
-"Deneyleri görmeden önce hangi mekanizmaları beklediğimizi yazıyoruz. Böylece sonuç geldikten sonra hikâye uydurmak yerine, teorik beklentiyi deneyle karşılaştırabiliyoruz. Uymayan sonuç da tez açısından değerlidir; çünkü o zaman teorik mekanizmanın tek başına yeterli olmadığını görürüz."
