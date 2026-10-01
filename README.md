@@ -73,3 +73,19 @@ Windows / VS Code üzerinde projeyi ilk kez açarken:
 ```
 
 Ayrıntılı açıklama: `dokumantasyon/07_windows_kurulum.md`
+
+
+## Teorik analiz
+
+Tez önerisindeki teorik boyut için ayrı bir `teorik_analiz/` klasörü tutulmaktadır.
+
+Önerilen okuma sırası:
+
+1. `01_aktivasyon_fonksiyonlari.md`
+2. `02_aktivasyon_turevleri.md`
+3. `03_optimizasyon_denklemleri.md`
+4. `04_gradyan_akisi.md`
+5. `05_aktivasyon_optimizer_etkilesimi.md`
+6. `06_teorik_beklentiler.md`
+
+Bu bölüm deney sonuçlarından bağımsız olarak önce hazırlanır; daha sonra teorik beklentiler deney bulgularıyla karşılaştırılır.
