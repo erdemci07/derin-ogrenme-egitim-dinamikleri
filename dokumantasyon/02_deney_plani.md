@@ -1,6 +1,6 @@
 # Deney Planı
 
-## Aşama 1 — Deney altyapısının kurulması
+## Aşama 1 — Deney altyapısının kurulması ✅ Tamamlandı
 
 Amaç, araştırma sonucu üretmek değil; sistemin doğru çalıştığını göstermektir.
 
@@ -24,7 +24,7 @@ Kontrol edilecekler:
 - Checkpoint oluşturma
 - Aynı seed ile tekrar üretilebilirlik
 
-Bu 2 epoch'luk çalışma tezde performans sonucu olarak kullanılmayacaktır.
+Bu 2 epoch'luk çalışma tezde performans sonucu olarak kullanılmayacaktır. Aynı seed ile iki kez çalıştırılmış ve aynı train/validation accuracy değerleri elde edilmiştir. Ayrıntı: `dokumantasyon/08_duman_testi_dogrulama.md`.
 
 ## Aşama 2 — Öğrenme oranı pilotu
 
