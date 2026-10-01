@@ -8,19 +8,19 @@ Amaç yalnızca fonksiyonların formüllerini vermek değildir. Daha sonraki den
 
 ReLU (Rectified Linear Unit):
 
-[
+$$
 f(x)=\max(0,x)
-]
+$$
 
 Parçalı gösterimi:
 
-[
+$$
 f(x)=
 \begin{cases}
 0, & x<0 \\
 x, & x\geq 0
 \end{cases}
-]
+$$
 
 Pozitif bölgede doğrusal davranır. Negatif bölgede çıktı sıfırdır. Hesaplama açısından basittir ve derin ağlarda yaygın olarak kullanılmasının temel nedenlerinden biri budur.
 
@@ -30,19 +30,19 @@ Negatif bölgede türevin de sıfır olması, bazı nöronların uzun süre gün
 
 Leaky ReLU, ReLU'nun negatif bölgede tamamen sıfır olmak yerine küçük bir eğim bırakılmış halidir:
 
-[
+$$
 f(x)=
 \begin{cases}
 x, & x\geq 0 \\
 \alpha x, & x<0
 \end{cases}
-]
+$$
 
 Bu çalışmada:
 
-[
+$$
 \alpha=0.01
-]
+$$
 
 olarak kullanılacaktır.
 
@@ -52,19 +52,19 @@ Negatif bölgede küçük de olsa gradyan akışı sürdüğü için ReLU'daki t
 
 ELU (Exponential Linear Unit):
 
-[
+$$
 f(x)=
 \begin{cases}
 x, & x>0 \\
 \alpha(e^x-1), & x\leq 0
 \end{cases}
-]
+$$
 
 Bu çalışmada:
 
-[
+$$
 \alpha=1
-]
+$$
 
 olarak kullanılacaktır.
 
@@ -74,23 +74,23 @@ Pozitif bölgede ReLU gibi doğrusal davranırken negatif bölgede üstel ve yum
 
 GELU (Gaussian Error Linear Unit) girdiyi doğrudan sıfırlamak yerine, girdinin büyüklüğüne bağlı yumuşak bir ağırlıklandırma uygular:
 
-[
+$$
 f(x)=x\Phi(x)
-]
+$$
 
-Burada (Phi(x)), standart normal dağılımın kümülatif dağılım fonksiyonudur.
+Burada $\Phi(x)$, standart normal dağılımın kümülatif dağılım fonksiyonudur.
 
 Eşdeğer biçimde:
 
-[
+$$
 \Phi(x)=\frac{1}{2}\left(1+\operatorname{erf}\left(\frac{x}{\sqrt{2}}\right)\right)
-]
+$$
 
 olduğundan:
 
-[
+$$
 f(x)=\frac{x}{2}\left(1+\operatorname{erf}\left(\frac{x}{\sqrt{2}}\right)\right)
-]
+$$
 
 şeklinde yazılabilir.
 
@@ -100,15 +100,15 @@ Bu çalışmada PyTorch'un yaklaşık olmayan GELU tanımı kullanılacaktır.
 
 Tez önerisinde kullanılan tanım:
 
-[
+$$
 f(x)=x\,\sigma(x)
-]
+$$
 
 Burada sigmoid fonksiyonu:
 
-[
+$$
 \sigma(x)=\frac{1}{1+e^{-x}}
-]
+$$
 
 şeklindedir.
 
@@ -120,23 +120,23 @@ Swish, ReLU gibi keskin bir geçişe sahip değildir. Negatif bölgede küçük 
 
 Mish fonksiyonu:
 
-[
+$$
 f(x)=x\tanh(\operatorname{softplus}(x))
-]
+$$
 
 şeklinde tanımlanır.
 
 Softplus:
 
-[
+$$
 \operatorname{softplus}(x)=\ln(1+e^x)
-]
+$$
 
 olduğundan:
 
-[
+$$
 f(x)=x\tanh(\ln(1+e^x))
-]
+$$
 
 biçiminde de yazılabilir.
 
