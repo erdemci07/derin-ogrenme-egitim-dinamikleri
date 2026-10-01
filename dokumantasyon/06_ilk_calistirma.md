@@ -50,7 +50,3 @@ Kontrol listesi:
 - Loss ve accuracy değerleri kaydedildi mi?
 - Son model kaydedildi mi?
 - Aynı seed ile tekrar çalıştırıldığında sonuçlar tutarlı mı?
-
-## Tez sahibinin kısa açıklaması
-
-"Ana deneylere geçmeden önce veri hazırlama, model eğitimi ve sonuç kaydı zincirinin düzgün çalıştığını görmek için iki epoch'luk kısa bir teknik test yaptık. Bu testin doğruluk sonucu tez bulgusu olarak kullanılmıyor."
