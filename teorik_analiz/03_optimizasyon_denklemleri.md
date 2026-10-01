@@ -192,7 +192,3 @@ g_t
 \rightarrow
 \text{yakınsama ve genelleme}
 $$
-
-## Tez sahibinin kısa anlatımı
-
-"Beş optimizerın hepsi gradyanı kullanıyor ama aynı biçimde kullanmıyor. SGD mevcut gradyanı doğrudan kullanırken Momentum geçmiş yönleri de taşıyor. RMSProp ve Adam ise gradyanın büyüklüğüne göre adımı parametre bazında ölçekliyor. Dolayısıyla aktivasyonun ürettiği gradyan dağılımı farklıysa, optimizerların buna verdikleri tepki de farklılaşabiliyor."
