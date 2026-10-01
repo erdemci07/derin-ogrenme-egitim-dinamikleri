@@ -16,13 +16,13 @@ olarak kullanılacaktır.
 
 En temel güncelleme:
 
-[
+$$
 \theta_{t+1}
 =
 \theta_t
 -
 \eta g_t
-]
+$$
 
 şeklindedir.
 
@@ -32,29 +32,29 @@ SGD yalnızca o adımdaki gradyanı kullanır. Bu nedenle aktivasyon fonksiyonun
 
 Momentum, geçmiş gradyanların etkisini de taşıyan bir hız terimi kullanır:
 
-[
+$$
 v_t
 =
 \mu v_{t-1}
 +
 g_t
-]
+$$
 
-[
+$$
 \theta_{t+1}
 =
 \theta_t
 -
 \eta v_t
-]
+$$
 
 Burada (mu) momentum katsayısıdır.
 
 Bu çalışmada:
 
-[
+$$
 \mu=0.9
-]
+$$
 
 kullanılacaktır.
 
@@ -64,32 +64,32 @@ Momentumun temel etkisi, ardışık adımlarda benzer yöndeki gradyanları biri
 
 RMSProp, gradyanların karelerinin hareketli ortalamasını tutar:
 
-[
+$$
 v_t
 =
 \rho v_{t-1}
 +
 (1-\rho)g_t^2
-]
+$$
 
 ardından parametre güncellemesi:
 
-[
+$$
 \theta_{t+1}
 =
 \theta_t
 -
 \eta
 \frac{g_t}{\sqrt{v_t}+\epsilon}
-]
+$$
 
 şeklinde yapılır.
 
 Bu çalışmada temel ayar:
 
-[
+$$
 \rho=0.99
-]
+$$
 
 olarak kullanılacaktır.
 
@@ -101,56 +101,56 @@ Adam hem birinci moment hem ikinci moment tahmini kullanır.
 
 Birinci moment:
 
-[
+$$
 m_t
 =
 \beta_1m_{t-1}
 +
 (1-\beta_1)g_t
-]
+$$
 
 İkinci moment:
 
-[
+$$
 v_t
 =
 \beta_2v_{t-1}
 +
 (1-\beta_2)g_t^2
-]
+$$
 
 Başlangıç yanlılığı düzeltmeleri:
 
-[
+$$
 \hat m_t
 =
 \frac{m_t}{1-\beta_1^t}
-]
+$$
 
-[
+$$
 \hat v_t
 =
 \frac{v_t}{1-\beta_2^t}
-]
+$$
 
 Parametre güncellemesi:
 
-[
+$$
 \theta_{t+1}
 =
 \theta_t
 -
 \eta
 \frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}
-]
+$$
 
 Bu çalışmada:
 
-[
+$$
 \beta_1=0.9,
 \qquad
 \beta_2=0.999
-]
+$$
 
 kullanılacaktır.
 
@@ -160,7 +160,7 @@ AdamW'nin temel farkı weight decay işlemini gradyan tabanlı adaptif güncelle
 
 Basitleştirilmiş güncelleme:
 
-[
+$$
 \theta_{t+1}
 =
 \theta_t
@@ -169,7 +169,7 @@ Basitleştirilmiş güncelleme:
 \frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}
 -
 \eta\lambda\theta_t
-]
+$$
 
 Burada (lambda) weight decay katsayısıdır.
 
@@ -181,7 +181,7 @@ Aktivasyon fonksiyonu geri yayılım sırasında (g_t) gradyanının yapısını
 
 Bu nedenle tezde incelenen etkileşim matematiksel olarak şu zincir üzerinden okunabilir:
 
-[
+$$
 \text{aktivasyon türevi}
 \rightarrow
 g_t
@@ -191,7 +191,7 @@ g_t
 \Delta\theta_t
 \rightarrow
 \text{yakınsama ve genelleme}
-]
+$$
 
 ## Tez sahibinin kısa anlatımı
 
