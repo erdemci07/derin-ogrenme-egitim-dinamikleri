@@ -29,7 +29,7 @@ function Test-VisualCppRuntime {
 }
 
 function Install-VisualCppRuntime {
-    Write-Host "[0/6] Microsoft Visual C++ Redistributable kontrol ediliyor..." -ForegroundColor Yellow
+    Write-Host "[0/7] Microsoft Visual C++ Redistributable kontrol ediliyor..." -ForegroundColor Yellow
 
     if (Test-VisualCppRuntime) {
         Write-Host "      Visual C++ Redistributable zaten kurulu." -ForegroundColor Green
@@ -82,7 +82,7 @@ $pythonKomutu = Bul-Python
 $venvPython = Join-Path $PSScriptRoot ".venv\Scripts\python.exe"
 
 if (-not (Test-Path $venvPython)) {
-    Write-Host "[1/6] Sanal ortam olusturuluyor (.venv)..." -ForegroundColor Yellow
+    Write-Host "[1/7] Sanal ortam olusturuluyor (.venv)..." -ForegroundColor Yellow
     if ($pythonKomutu.Count -eq 2) {
         & $pythonKomutu[0] $pythonKomutu[1] -m venv (Join-Path $PSScriptRoot ".venv")
     }
@@ -91,16 +91,34 @@ if (-not (Test-Path $venvPython)) {
     }
 }
 else {
-    Write-Host "[1/6] .venv zaten mevcut, yeniden kullaniliyor." -ForegroundColor Green
+    Write-Host "[1/7] .venv zaten mevcut, yeniden kullaniliyor." -ForegroundColor Green
 }
 
-Write-Host "[2/6] pip guncelleniyor..." -ForegroundColor Yellow
+Write-Host "[2/7] pip guncelleniyor..." -ForegroundColor Yellow
 & $venvPython -m pip install --upgrade pip setuptools wheel
 
-Write-Host "[3/6] Gerekli kutuphaneler kuruluyor..." -ForegroundColor Yellow
+Write-Host "[3/7] Gerekli kutuphaneler kuruluyor..." -ForegroundColor Yellow
 & $venvPython -m pip install -r (Join-Path $PSScriptRoot "requirements.txt")
 
-Write-Host "[4/6] PyTorch kurulumu kontrol ediliyor..." -ForegroundColor Yellow
+Write-Host "[4/7] GPU / CUDA destegi kontrol ediliyor..." -ForegroundColor Yellow
+$nvidiaSmi = Get-Command nvidia-smi -ErrorAction SilentlyContinue
+
+if ($nvidiaSmi) {
+    Write-Host "      NVIDIA GPU algilandi." -ForegroundColor Green
+    & nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
+
+    Write-Host "      CPU PyTorch paketi varsa kaldiriliyor..." -ForegroundColor Yellow
+    & $venvPython -m pip uninstall -y torch torchvision torchaudio
+
+    Write-Host "      CUDA destekli PyTorch kuruluyor (cu126)..." -ForegroundColor Yellow
+    & $venvPython -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+}
+else {
+    Write-Host "      NVIDIA GPU / nvidia-smi bulunamadi. CUDA kurulumu atlandi." -ForegroundColor Yellow
+    Write-Host "      CUDA yalnizca desteklenen NVIDIA GPU ile kullanilabilir." -ForegroundColor Yellow
+}
+
+Write-Host "[5/7] PyTorch kurulumu kontrol ediliyor..." -ForegroundColor Yellow
 $torchKontrol = "import sys; import torch; print('PyTorch OK:', torch.__version__)"
 & $venvPython -c $torchKontrol
 
@@ -112,10 +130,10 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-Write-Host "[5/6] Kutuphaneler kontrol ediliyor..." -ForegroundColor Yellow
+Write-Host "[6/7] Kutuphaneler kontrol ediliyor..." -ForegroundColor Yellow
 & $venvPython (Join-Path $PSScriptRoot "kurulumu_kontrol_et.py")
 
-Write-Host "[6/6] VS Code icin Python yolu hazirlandi." -ForegroundColor Yellow
+Write-Host "[7/7] VS Code icin Python yolu hazirlandi." -ForegroundColor Yellow
 Write-Host ""
 Write-Host "Kurulum tamamlandi." -ForegroundColor Green
 Write-Host ""
