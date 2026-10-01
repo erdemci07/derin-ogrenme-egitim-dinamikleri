@@ -78,7 +78,3 @@ Teorik yapı bize mekanizma hakkında beklenti verir; ancak genelleme performans
 Veri dağılımı, ağ mimarisi, öğrenme oranı, başlangıç ağırlıkları ve eğitim süreci sonucu etkiler.
 
 Bu nedenle bu bölümün amacı sonuçları önceden ilan etmek değil, deneylerde görülecek davranışlar için test edilebilir açıklamalar oluşturmaktır.
-
-## Tez sahibinin kısa anlatımı
-
-"Tezde iki bileşeni ayrı ayrı puanlamıyoruz. Aktivasyon fonksiyonu gradyanın yapısını değiştiriyor, optimizer ise bu gradyanı farklı bir güncelleme kuralıyla işliyor. Dolayısıyla gerçek araştırma sorusu bu iki mekanizmanın birlikte nasıl davrandığı."
