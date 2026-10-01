@@ -6,28 +6,28 @@ Bu tezde asıl araştırılan konu aktivasyon fonksiyonlarının veya optimizerl
 
 Bir aktivasyon fonksiyonunun türevi, geri yayılımla oluşan gradyanın bir parçasıdır:
 
-[
+$$
 g_t
 =
 \nabla_{\theta}L_t
-]
+$$
 
 Bu gradyan daha sonra optimizerın güncelleme kuralına girer.
 
 SGD için:
 
-[
+$$
 \Delta\theta_t=-\eta g_t
-]
+$$
 
 Adam için ise yaklaşık olarak:
 
-[
+$$
 \Delta\theta_t
 =
 -\eta
 \frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}
-]
+$$
 
 şeklindedir.
 
