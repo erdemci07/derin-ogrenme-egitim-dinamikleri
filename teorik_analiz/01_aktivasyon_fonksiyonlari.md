@@ -147,7 +147,3 @@ Mish de Swish gibi yumuşak ve türevlenebilir bir yapıdadır. Negatif bölgede
 Tez önerisinin temel iddiası, aktivasyon fonksiyonlarının optimizerlardan bağımsız değerlendirilmemesi gerektiğidir. Bu nedenle fonksiyonların yalnız son doğruluk üzerindeki etkisine değil, gradyanın büyüklüğünü ve yönünü nasıl değiştirdiğine de bakılacaktır.
 
 Sonraki bölümde bu altı fonksiyonun türevleri ele alınmaktadır.
-
-## Tez sahibinin kısa anlatımı
-
-"Burada önce kullandığımız altı aktivasyon fonksiyonunun matematiksel yapısını ortaya koyuyoruz. Çünkü optimizer ağırlıkları doğrudan aktivasyon değerlerine göre değil, geri yayılım sırasında oluşan gradyanlara göre güncelliyor. Dolayısıyla aktivasyonun türev yapısı, optimizerın eline ulaşan bilgiyi doğrudan etkiliyor."
