@@ -28,9 +28,9 @@ Bu farkın özellikle ilk katmanlardaki gradyan ölçümlerinde gözlenip gözle
 
 ELU için negatif bölgede türev:
 
-[
+$$
 \alpha e^x
-]
+$$
 
 olduğu için çok negatif girdilerde türev küçülebilir.
 
@@ -54,9 +54,9 @@ Tezin temel hipotezlerinden biri, aktivasyonun etkisinin optimizerdan tamamen ba
 
 İstatistiksel olarak bu durum iki yönlü ANOVA'daki:
 
-[
+$$
 \text{aktivasyon} \times \text{optimizer}
-]
+$$
 
 etkileşim terimiyle değerlendirilecektir.
 
