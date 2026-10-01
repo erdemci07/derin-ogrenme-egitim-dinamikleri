@@ -1,7 +1,5 @@
 # Terimler Sözlüğü
 
-Bu belge, çalışmada kullanılan teknik kavramların tez sahibi tarafından rahatça açıklanabilmesi için hazırlanmıştır.
-
 ## Aktivasyon fonksiyonu
 Sinir ağının doğrusal olmayan ilişkileri öğrenmesini sağlayan matematiksel fonksiyondur.
 
