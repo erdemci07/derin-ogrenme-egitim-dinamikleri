@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import importlib
 import platform
+import shutil
 import sys
 
 
@@ -48,10 +49,16 @@ def ana() -> None:
             print("GPU:", torch.cuda.get_device_name(0))
             print("CUDA surumu:", torch.version.cuda)
         else:
-            print(
-                "Not: CUDA GPU algilanmadi. Duman testi CPU'da calisabilir; "
-                "ana deneyler icin GPU ortami daha sonra ayrica dogrulanacak."
-            )
+            if shutil.which("nvidia-smi"):
+                hata_var = True
+                print(
+                    "[HATA] NVIDIA GPU algilandi ancak PyTorch CUDA'yi kullanamiyor. "
+                    "CUDA destekli PyTorch kurulumu tamamlanmamis olabilir."
+                )
+            else:
+                print(
+                    "Not: NVIDIA CUDA GPU algilanmadi. CPU modu kullanilacak."
+                )
     except Exception:
         pass
 
