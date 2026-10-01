@@ -4,13 +4,13 @@ Geri yayılım sırasında bir katmandaki gradyan, zincir kuralı ile katmanlar 
 
 Basitleştirilmiş biçimde:
 
-[
+$$
 \frac{\partial L}{\partial z}
 =
 \frac{\partial L}{\partial a}
 \cdot
 \frac{\partial a}{\partial z}
-]
+$$
 
 Burada:
 
@@ -22,13 +22,13 @@ Dolayısıyla (f'(z)) çok küçük, sıfır veya büyük olduğunda geri yayıl
 
 ## ReLU türevi
 
-[
+$$
 f'(x)=
 \begin{cases}
 0, & x<0 \\
 1, & x>0
 \end{cases}
-]
+$$
 
 (x=0) noktasında klasik anlamda türev yoktur. Pratik derin öğrenme uygulamalarında bu noktaya uygun bir alt-türev değeri atanır.
 
@@ -41,13 +41,13 @@ Bu nedenle çok sayıda nöron sürekli negatif bölgede kalırsa öğrenme yava
 
 ## Leaky ReLU türevi
 
-[
+$$
 f'(x)=
 \begin{cases}
 \alpha, & x<0 \\
 1, & x>0
 \end{cases}
-]
+$$
 
 Bu çalışmada (alpha=0.01).
 
@@ -55,13 +55,13 @@ Negatif bölgede gradyan tamamen sıfırlanmadığı için ReLU'ya göre daha s�
 
 ## ELU türevi
 
-[
+$$
 f'(x)=
 \begin{cases}
 1, & x>0 \\
 \alpha e^x, & x\leq0
 \end{cases}
-]
+$$
 
 Negatif (x) değerleri büyüdükçe (e^x) sıfıra yaklaşır. Bu nedenle ELU negatif uç bölgede doygunluk gösterebilir.
 
@@ -69,45 +69,45 @@ ReLU'dan farklı olarak negatif bölgede türev bir anda sıfıra düşmez; anca
 
 ## GELU türevi
 
-[
+$$
 f(x)=x\Phi(x)
-]
+$$
 
 olduğundan çarpım kuralıyla:
 
-[
+$$
 f'(x)=\Phi(x)+x\phi(x)
-]
+$$
 
 Burada (phi(x)) standart normal dağılımın yoğunluk fonksiyonudur:
 
-[
+$$
 \phi(x)=\frac{1}{\sqrt{2\pi}}e^{-x^2/2}
-]
+$$
 
 GELU'nun türevi ReLU gibi iki sabit bölgeden oluşmaz. Geçiş bölgesi yumuşaktır ve girdinin büyüklüğüne bağlıdır.
 
 ## Swish türevi
 
-[
+$$
 f(x)=x\sigma(x)
-]
+$$
 
 için:
 
-[
+$$
 f'(x)
 =
 \sigma(x)
 +
 x\sigma(x)(1-\sigma(x))
-]
+$$
 
 eşdeğer biçimde:
 
-[
+$$
 f'(x)=\sigma(x)\left[1+x(1-\sigma(x))\right]
-]
+$$
 
 şeklinde yazılabilir.
 
@@ -115,25 +115,25 @@ Bu yapı, gradyanın giriş değerine göre sürekli değişmesine neden olur.
 
 ## Mish türevi
 
-[
+$$
 f(x)=x\tanh(\operatorname{softplus}(x))
-]
+$$
 
 olsun.
 
-[
+$$
 s=\operatorname{softplus}(x)=\ln(1+e^x)
-]
+$$
 
 tanımıyla:
 
-[
+$$
 f'(x)
 =
 \tanh(s)
 +
 x\sigma(x)\left(1-\tanh^2(s)\right)
-]
+$$
 
 elde edilir.
 
