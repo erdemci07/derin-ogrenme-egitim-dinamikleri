@@ -152,7 +152,3 @@ Bu nedenle deneylerde özellikle şu noktalar izlenecektir:
 - sıfıra yakın türev oranı,
 - ReLU için dead-neuron oranı,
 - parametre güncelleme büyüklüğü.
-
-## Tez sahibinin kısa anlatımı
-
-"Optimizer, geri yayılımla gelen gradyanı kullanıyor. Aktivasyon fonksiyonunun türevi de bu gradyanın oluştuğu zincirin içinde. Bu nedenle iki farklı aktivasyon aynı optimizerla kullanıldığında optimizerın gördüğü gradyan dağılımı aynı olmak zorunda değil. Tezin teorik tarafında önce bunu açıklayıp sonra deneylerde gerçekten oluşup oluşmadığına bakıyoruz."
