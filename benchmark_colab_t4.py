@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import platform
 import subprocess
 import time
@@ -276,6 +277,7 @@ def ana() -> None:
         "amac": "Tez ana deneyleri oncesi Colab T4 kapasite benchmarki",
         "bilimsel_sonuc_degil": True,
         "ortam": {
+            "git_commit": os.environ.get("TEZ_GIT_COMMIT", "unknown"),
             "gpu": gpu_adi,
             "nvidia_smi": _nvidia_smi(),
             "python": platform.python_version(),
