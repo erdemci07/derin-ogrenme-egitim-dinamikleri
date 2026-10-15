@@ -4,6 +4,7 @@ aciklama: "Ana deneylerden önce optimizer-bazlı öğrenme oranını belirleyen
 veri:
   veri_klasoru: veriler
   split_dosyasi: ayarlar/cifar10_split.json
+  stats_dosyasi: ayarlar/cifar10_stats.json
   batch_size: 128
   num_workers: 0
   split_seed: 2026
