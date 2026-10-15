@@ -31,6 +31,7 @@ from kaynak_kod.kayit_sistemi import epoch_csv_kaydet, json_kaydet, klasor_hazir
 from kaynak_kod.optimizasyon_algoritmalari import optimizasyon_olustur
 from kaynak_kod.tekrarlanabilirlik import sabit_seed_ayarla
 from kaynak_kod.veri_hazirlama import cifar10_yukleyicileri
+from kaynak_kod.yakinsama_analizi import yakinsama_ozeti
 
 
 def run_id_olustur(optimizer: str, aktivasyon: str, lr: float, seed: int) -> str:
@@ -120,6 +121,9 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
             "train_accuracy": train["accuracy"],
             "validation_loss": val["loss"],
             "validation_accuracy": val["accuracy"],
+            "macro_precision": val["macro_precision"],
+            "macro_recall": val["macro_recall"],
+            "macro_f1": val["macro_f1"],
             "learning_rate": kosu["learning_rate"],
             "train_seconds": train["seconds"],
             "validation_seconds": val["seconds"],
@@ -160,6 +164,10 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
         )
 
     son = kayitlar[-1]
+    yakinsama = yakinsama_ozeti(
+        [float(x["validation_accuracy"]) for x in kayitlar]
+    )
+
     json_kaydet(
         tamamlandi,
         {
@@ -169,6 +177,12 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
             "final_train_accuracy": son["train_accuracy"],
             "final_validation_loss": son["validation_loss"],
             "final_validation_accuracy": son["validation_accuracy"],
+            "final_macro_precision": son["macro_precision"],
+            "final_macro_recall": son["macro_recall"],
+            "final_macro_f1": son["macro_f1"],
+            "aulc_normalized": yakinsama["aulc_normalized"],
+            "epoch_to_95_own_best": yakinsama["epoch_to_95_own_best"],
+            "own_best_validation_accuracy": yakinsama["own_best_validation_accuracy"],
             "cihaz": str(cihaz),
             "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
             "pytorch_surumu": torch.__version__,
