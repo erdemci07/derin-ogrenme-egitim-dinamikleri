@@ -80,3 +80,21 @@ JSON ve CSV sonuçları geçici dosyaya yazılıp tek işlemle hedef dosyanın y
 eklenecektir.
 
 Büyük 60 koşuluk LR pilotu, Aşama 1 tamamlanmadan başlatılmayacaktır.
+
+
+## Teknik doğrulama notebooku
+
+`colab/01_deney_motoru_dogrulama.ipynb`
+
+aynı 3 epochluk koşuyu iki biçimde çalıştırır:
+
+- kesintisiz referans,
+- 1. epoch sonunda checkpoint alıp yeni model/loader ile devam.
+
+Final model parametreleri ve epoch metrikleri karşılaştırılır. Tolerans içinde eşleşme sağlanmazsa doğrulama başarısız sayılır ve LR pilotuna geçilmez.
+
+Doğrulama sonucu Google Drive'da:
+
+`MyDrive/tez_deney_sonuclari/asama1_deney_motoru_dogrulama/dogrulama_sonucu.json`
+
+olarak saklanır.
