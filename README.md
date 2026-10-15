@@ -97,6 +97,6 @@ Notebook:
 
 `colab/00_t4_benchmark.ipynb`
 
-Bu notebook özel GitHub deposunu Colab Secret üzerinden salt-okunur token ile alır, sonuçları Google Drive'a kaydeder ve CNN-v1 / ResNet-18 epoch sürelerini ölçer.
+Bu notebook public GitHub deposunu doğrudan klonlar, kullanılan commit SHA'sını kaydeder, sonuçları Google Drive'a yazar ve CNN-v1 / ResNet-18 epoch sürelerini ölçer.
 
 Ayrıntı: `dokumantasyon/11_colab_t4_benchmark.md`
