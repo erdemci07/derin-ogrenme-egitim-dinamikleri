@@ -200,3 +200,16 @@ Her aşamada:
 5. ancak bundan sonra sonraki aşamaya geçilir.
 
 İlk sıradaki iş: Colab T4 benchmark ve süre ölçümü.
+
+
+## Benchmark sonrası güncel kapsam kararı
+
+Gerçek Tesla T4 benchmarkı tamamlandı. 1.035 koşu maksimum teorik üst sınır olarak korunmakla birlikte varsayılan çalışma planı değildir.
+
+Güncel yürütme sırası:
+- Seviye A: 255 çekirdek koşu
+- Seviye B: ek veri setlerinde başlangıçta 3 seed
+- Seviye C: seçilmiş ResNet-18 doğrulaması
+- kaynak uygunsa seed ve kapsam genişletmesi
+
+Ayrıntı: `dokumantasyon/12_t4_benchmark_sonucu_ve_kapsam_karari.md`
