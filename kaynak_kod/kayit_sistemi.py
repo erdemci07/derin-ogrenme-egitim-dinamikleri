@@ -15,11 +15,6 @@ def klasor_hazirla(klasor: str | Path) -> Path:
     return yol
 
 
-def _atomik_degistir(gecici: Path, hedef: Path) -> None:
-    gecici.flush if False else None
-    os.replace(gecici, hedef)
-
-
 def json_kaydet(yol: str | Path, veri: dict[str, Any]) -> None:
     hedef = Path(yol)
     hedef.parent.mkdir(parents=True, exist_ok=True)
