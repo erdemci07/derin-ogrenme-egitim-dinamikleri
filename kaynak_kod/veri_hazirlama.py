@@ -325,3 +325,69 @@ def cifar10_yukleyicileri(
     )
 
     return train_loader, val_loader
+
+
+def cifar10_probe_batch(
+    veri_klasoru: str,
+    split_dosyasi: str,
+    stats_dosyasi: str,
+    split_seed: int,
+    probe_boyutu: int = 128,
+):
+    """Yalnız eğitim alt kümesinden sabit ve augmentation'sız probe batch üretir."""
+    if probe_boyutu <= 0:
+        raise ValueError("probe_boyutu pozitif olmalıdır.")
+
+    veri_koku, harici_kok = _veri_kokunu_coz(veri_klasoru)
+    veri_koku.mkdir(parents=True, exist_ok=True)
+
+    if harici_kok:
+        _cifar10_drive_verisini_hazirla(veri_koku)
+
+    indeks_taban = datasets.CIFAR10(
+        root=str(veri_koku),
+        train=True,
+        download=not harici_kok,
+        transform=None,
+    )
+    etiketler = np.asarray(indeks_taban.targets)
+
+    etkin_split_dosyasi = Path(
+        os.environ.get("TEZ_SPLIT_DOSYASI", split_dosyasi)
+    )
+    etkin_stats_dosyasi = Path(
+        os.environ.get("TEZ_STATS_DOSYASI", stats_dosyasi)
+    )
+
+    train_idx, _ = _split_indeksleri(
+        etiketler,
+        etkin_split_dosyasi,
+        split_seed,
+    )
+    mean, std = _istatistikleri_al(
+        veri_koku,
+        train_idx,
+        split_seed,
+        etkin_stats_dosyasi,
+    )
+
+    _, probe_transform = _donusumler(mean, std)
+    probe_taban = datasets.CIFAR10(
+        root=str(veri_koku),
+        train=True,
+        download=False,
+        transform=probe_transform,
+    )
+
+    # Split dosyasındaki ilk örnekler sabittir; augmentation uygulanmaz.
+    secilen = train_idx[: min(probe_boyutu, len(train_idx))]
+    probe_set = Subset(probe_taban, secilen)
+    probe_loader = DataLoader(
+        probe_set,
+        batch_size=len(secilen),
+        shuffle=False,
+        num_workers=0,
+        pin_memory=False,
+    )
+
+    return next(iter(probe_loader))
