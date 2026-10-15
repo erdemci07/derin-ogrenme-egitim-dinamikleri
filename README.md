@@ -87,3 +87,16 @@ Tez önerisindeki teorik boyut için ayrı bir `teorik_analiz/` klasörü tutulm
 6. `06_teorik_beklentiler.md`
 
 Bu bölüm deney sonuçlarından bağımsız olarak önce hazırlanır; daha sonra teorik beklentiler deney bulgularıyla karşılaştırılır.
+
+
+## Colab T4 — Aşama 0
+
+Ana deneylerden önce gerçek T4 kapasitesi ölçülür.
+
+Notebook:
+
+`colab/00_t4_benchmark.ipynb`
+
+Bu notebook özel GitHub deposunu Colab Secret üzerinden salt-okunur token ile alır, sonuçları Google Drive'a kaydeder ve CNN-v1 / ResNet-18 epoch sürelerini ölçer.
+
+Ayrıntı: `dokumantasyon/11_colab_t4_benchmark.md`
