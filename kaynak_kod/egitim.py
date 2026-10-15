@@ -8,9 +8,10 @@ import torch
 from torch import nn
 
 
-def _accuracy(logitler: torch.Tensor, hedefler: torch.Tensor) -> float:
-    tahminler = logitler.argmax(dim=1)
-    return (tahminler == hedefler).float().mean().item()
+def _cihaz_senkronize(cihaz: torch.device) -> None:
+    """CUDA asenkron işlemlerini süre ölçümü sınırında tamamlar."""
+    if cihaz.type == "cuda":
+        torch.cuda.synchronize(cihaz)
 
 
 def bir_epoch_egit(
@@ -25,6 +26,8 @@ def bir_epoch_egit(
     toplam_kayip = 0.0
     toplam_dogru = 0
     toplam_ornek = 0
+
+    _cihaz_senkronize(cihaz)
     baslangic = time.perf_counter()
 
     for girdiler, hedefler in loader:
@@ -42,6 +45,7 @@ def bir_epoch_egit(
         toplam_dogru += (logitler.argmax(dim=1) == hedefler).sum().item()
         toplam_ornek += batch_boyutu
 
+    _cihaz_senkronize(cihaz)
     sure = time.perf_counter() - baslangic
 
     return {
@@ -64,6 +68,9 @@ def dogrula(
     toplam_dogru = 0
     toplam_ornek = 0
 
+    _cihaz_senkronize(cihaz)
+    baslangic = time.perf_counter()
+
     for girdiler, hedefler in loader:
         girdiler = girdiler.to(cihaz, non_blocking=True)
         hedefler = hedefler.to(cihaz, non_blocking=True)
@@ -76,7 +83,11 @@ def dogrula(
         toplam_dogru += (logitler.argmax(dim=1) == hedefler).sum().item()
         toplam_ornek += batch_boyutu
 
+    _cihaz_senkronize(cihaz)
+    sure = time.perf_counter() - baslangic
+
     return {
         "loss": toplam_kayip / toplam_ornek,
         "accuracy": toplam_dogru / toplam_ornek,
+        "seconds": sure,
     }
