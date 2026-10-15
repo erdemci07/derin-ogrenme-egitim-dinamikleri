@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import math
 import os
+import time
 from pathlib import Path
 
 import torch
@@ -214,6 +215,15 @@ def ana(argv=None) -> None:
         default=None,
         help="Yalnız teknik entegrasyon testi için epoch sayısını geçici olarak ezer.",
     )
+    parser.add_argument(
+        "--oturum-dakika",
+        type=float,
+        default=None,
+        help=(
+            "Yeni bir koşuya başlamadan önce bu oturum süresi aşıldıysa "
+            "temiz biçimde durur. Colab oturumları arasında tekrar çalıştırılabilir."
+        ),
+    )
     args = parser.parse_args(argv)
 
     ayarlar = yaml.safe_load(
@@ -253,9 +263,50 @@ def ana(argv=None) -> None:
     if args.maksimum_run is not None:
         calisilacak = plan[: args.maksimum_run]
 
+    varsayilan_cikti = Path(ayarlar["cikti"]["klasor"])
+    cikti_koku = Path(
+        os.environ.get("TEZ_CIKTI_KLASORU", str(varsayilan_cikti))
+    )
+    tamamlanan_baslangic = sum(
+        (cikti_koku / kosu["run_id"] / "tamamlandi.json").exists()
+        for kosu in plan
+    )
+    print(
+        f"\nPilot ilerleme: {tamamlanan_baslangic}/{len(plan)} koşu tamamlandı.",
+        flush=True,
+    )
+
+    oturum_baslangic = time.monotonic()
+
     for sira, kosu in enumerate(calisilacak, start=1):
+        if args.oturum_dakika is not None:
+            gecen_dakika = (time.monotonic() - oturum_baslangic) / 60.0
+            if gecen_dakika >= args.oturum_dakika:
+                print(
+                    f"\n[OTURUM SINIRI] {gecen_dakika:.1f} dakika geçti. "
+                    "Yeni koşu başlatılmadan temiz biçimde duruldu.",
+                    flush=True,
+                )
+                break
+
         print(f"\n=== Koşu {sira}/{len(calisilacak)}: {kosu['run_id']} ===")
         tek_kosu(ayarlar, kosu, cihaz)
+
+    tamamlanan_son = sum(
+        (cikti_koku / kosu["run_id"] / "tamamlandi.json").exists()
+        for kosu in plan
+    )
+    print(
+        f"\nPilot ilerleme: {tamamlanan_son}/{len(plan)} koşu tamamlandı.",
+        flush=True,
+    )
+    if tamamlanan_son < len(plan):
+        print(
+            "Pilot henüz tamamlanmadı. Aynı Colab notebooku sonraki T4 "
+            "oturumunda yeniden çalıştırın; tamamlanan koşular atlanacak, "
+            "yarım koşu checkpointten devam edecektir.",
+            flush=True,
+        )
 
 
 if __name__ == "__main__":
