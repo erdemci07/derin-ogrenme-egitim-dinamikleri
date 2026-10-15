@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import tarfile
 from pathlib import Path
 
 import numpy as np
@@ -19,6 +21,47 @@ from .tekrarlanabilirlik import dataloader_generator
 # config dosyasında donduracağız.
 CIFAR10_MEAN = (0.4914, 0.4822, 0.4465)
 CIFAR10_STD = (0.2470, 0.2435, 0.2616)
+
+
+def _veri_kokunu_coz(veri_klasoru: str) -> tuple[Path, bool]:
+    """Veri kökünü ve bunun harici/kalıcı bir kök olup olmadığını döndürür.
+
+    Colab notebook'u TEZ_VERI_KLASORU değişkenini Google Drive'daki
+    tez_datasets klasörüne ayarlar. Yerel çalışmada fonksiyona verilen
+    klasör kullanılmaya devam eder.
+    """
+    ortam_yolu = os.environ.get("TEZ_VERI_KLASORU")
+    if ortam_yolu:
+        return Path(ortam_yolu), True
+    return Path(veri_klasoru), False
+
+
+def _cifar10_drive_verisini_hazirla(veri_koku: Path) -> None:
+    """Drive'daki CIFAR-10 verisinin torchvision tarafından okunabilir olmasını sağlar.
+
+    Öncelik çıkarılmış 'cifar-10-batches-py' klasörüdür. Yalnızca standart
+    'cifar-10-python.tar.gz' arşivi varsa aynı Drive klasörüne bir kez açılır.
+    """
+    cikartilmis = veri_koku / "cifar-10-batches-py"
+    if cikartilmis.is_dir():
+        return
+
+    arsiv = veri_koku / "cifar-10-python.tar.gz"
+    if arsiv.is_file():
+        print(
+            f"CIFAR-10 arşivi bulundu, Drive üzerinde bir kez açılıyor: {arsiv}",
+            flush=True,
+        )
+        with tarfile.open(arsiv, "r:gz") as tar:
+            tar.extractall(veri_koku)
+        if cikartilmis.is_dir():
+            return
+
+    raise FileNotFoundError(
+        "CIFAR-10 Google Drive üzerinde bulunamadı. Beklenen konum: "
+        f"{cikartilmis} veya {arsiv}. "
+        "Colab veri kökü MyDrive/tez_datasets olarak ayarlanmıştır."
+    )
 
 
 def _donusumler():
@@ -90,14 +133,22 @@ def cifar10_yukleyicileri(
     """
     train_transform, val_transform = _donusumler()
 
+    veri_koku, harici_kok = _veri_kokunu_coz(veri_klasoru)
+    veri_koku.mkdir(parents=True, exist_ok=True)
+
+    if harici_kok:
+        # Colab/Drive kullanımında veri zaten kullanıcı tarafından sağlanır.
+        # Ağdan tekrar indirme yapılmaz.
+        _cifar10_drive_verisini_hazirla(veri_koku)
+
     train_taban = datasets.CIFAR10(
-        root=veri_klasoru,
+        root=str(veri_koku),
         train=True,
-        download=True,
+        download=not harici_kok,
         transform=train_transform,
     )
     val_taban = datasets.CIFAR10(
-        root=veri_klasoru,
+        root=str(veri_koku),
         train=True,
         download=False,
         transform=val_transform,
