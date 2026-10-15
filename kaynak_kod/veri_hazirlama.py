@@ -184,6 +184,10 @@ def _istatistikleri_al(
         veri = json.loads(stats_dosyasi.read_text(encoding="utf-8"))
         if int(veri["split_seed"]) != split_seed:
             raise ValueError("Normalizasyon istatistiğinin split seed değeri uyuşmuyor.")
+        if veri.get("train_index_sha256") != split_hash:
+            raise ValueError(
+                "Normalizasyon istatistiği mevcut eğitim splitine ait değil."
+            )
         mean = tuple(float(x) for x in veri["mean"])
         std = tuple(float(x) for x in veri["std"])
         if len(mean) != 3 or len(std) != 3 or any(x <= 0 for x in std):
@@ -265,9 +269,16 @@ def cifar10_yukleyicileri(
     )
     etiketler = np.asarray(indeks_taban.targets)
 
+    etkin_split_dosyasi = Path(
+        os.environ.get("TEZ_SPLIT_DOSYASI", split_dosyasi)
+    )
+    etkin_stats_dosyasi = Path(
+        os.environ.get("TEZ_STATS_DOSYASI", stats_dosyasi)
+    )
+
     train_idx, val_idx = _split_indeksleri(
         etiketler,
-        Path(split_dosyasi),
+        etkin_split_dosyasi,
         split_seed,
     )
 
@@ -275,7 +286,7 @@ def cifar10_yukleyicileri(
         veri_koku,
         train_idx,
         split_seed,
-        Path(stats_dosyasi),
+        etkin_stats_dosyasi,
     )
     train_transform, val_transform = _donusumler(mean, std)
 
