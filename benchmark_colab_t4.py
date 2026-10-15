@@ -91,7 +91,7 @@ def _tek_model_benchmark(
         torch.cuda.empty_cache()
         torch.cuda.reset_peak_memory_stats(cihaz)
 
-    print(f"\n--- {model_adi} benchmark ---")
+    print(f"\n--- {model_adi} benchmark ---", flush=True)
 
     for epoch in range(1, warmup_epoch + 1):
         if cihaz.type == "cuda":
@@ -109,7 +109,8 @@ def _tek_model_benchmark(
         sure = time.perf_counter() - baslangic
         print(
             f"Warmup {epoch}/{warmup_epoch}: "
-            f"{sure:.2f} sn | train_acc={sonuc['accuracy']:.4f}"
+            f"{sure:.2f} sn | train_acc={sonuc['accuracy']:.4f}",
+            flush=True,
         )
 
     train_sureleri: list[float] = []
@@ -157,7 +158,8 @@ def _tek_model_benchmark(
             f"train={train_suresi:.2f} sn | "
             f"val={val_suresi:.2f} sn | "
             f"train_acc={son_train['accuracy']:.4f} | "
-            f"val_acc={son_val['accuracy']:.4f}"
+            f"val_acc={son_val['accuracy']:.4f}",
+            flush=True,
         )
 
     toplam_epoch_sureleri = [
@@ -222,14 +224,17 @@ def ana() -> None:
             "Benchmark kaydedilecek ancak T4 sonucu olarak yorumlanmamali."
         )
 
-    print("=" * 62)
-    print("COLAB T4 TEZ BENCHMARK")
-    print("=" * 62)
-    print("GPU:", gpu_adi)
-    print("PyTorch:", torch.__version__)
-    print("CUDA:", torch.version.cuda)
-    print("cuDNN:", torch.backends.cudnn.version())
-    print("nvidia-smi:", _nvidia_smi())
+    print("=" * 62, flush=True)
+    print("COLAB T4 TEZ BENCHMARK", flush=True)
+    print("=" * 62, flush=True)
+    print("GPU:", gpu_adi, flush=True)
+    print("PyTorch:", torch.__version__, flush=True)
+    print("CUDA:", torch.version.cuda, flush=True)
+    print("cuDNN:", torch.backends.cudnn.version(), flush=True)
+    print("nvidia-smi:", _nvidia_smi(), flush=True)
+
+    print("\n[1/3] CIFAR-10 veri seti hazırlanıyor...", flush=True)
+    veri_baslangic = time.perf_counter()
 
     train_loader, val_loader = cifar10_yukleyicileri(
         veri_klasoru="veriler",
@@ -240,8 +245,18 @@ def ana() -> None:
         num_workers=args.num_workers,
     )
 
+    veri_suresi = time.perf_counter() - veri_baslangic
+    print(
+        f"[1/3] CIFAR-10 hazır. Süre: {veri_suresi:.2f} sn | "
+        f"train batch={len(train_loader)} | val batch={len(val_loader)}",
+        flush=True,
+    )
+
+    print("\n[2/3] CNN-v1 benchmark başlıyor...", flush=True)
     sonuclar = []
     for model_adi in ("cnn_v1", "resnet18"):
+        if model_adi == "resnet18":
+            print("\n[3/3] ResNet-18 benchmark başlıyor...", flush=True)
         sonuclar.append(
             _tek_model_benchmark(
                 model_adi=model_adi,
