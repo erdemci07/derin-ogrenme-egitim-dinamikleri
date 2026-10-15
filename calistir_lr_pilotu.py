@@ -81,6 +81,7 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
         split_seed=int(ayarlar["veri"]["split_seed"]),
         loader_seed=seed,
         num_workers=int(ayarlar["veri"]["num_workers"]),
+        stats_dosyasi=ayarlar["veri"]["stats_dosyasi"],
     )
 
     model = CNNv1(kosu["aktivasyon"]).to(cihaz)
@@ -127,16 +128,6 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
         kayitlar.append(satir)
         epoch_csv_kaydet(cikti / "epoch_sonuclari.csv", kayitlar)
 
-        checkpoint_kaydet(
-            checkpoint_dosyasi,
-            model=model,
-            optimizer=optimizer,
-            epoch=epoch,
-            kayitlar=kayitlar,
-            train_loader=train_loader,
-            run_id=kosu["run_id"],
-        )
-
         if not all(
             math.isfinite(float(satir[alan]))
             for alan in (
@@ -152,6 +143,16 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
             )
             print(f"[KARARSIZ] {kosu['run_id']} epoch={epoch}")
             return
+
+        checkpoint_kaydet(
+            checkpoint_dosyasi,
+            model=model,
+            optimizer=optimizer,
+            epoch=epoch,
+            kayitlar=kayitlar,
+            train_loader=train_loader,
+            run_id=kosu["run_id"],
+        )
 
         print(
             f"{kosu['run_id']} | {epoch:02d}/{ayarlar['egitim']['epoch']} | "
