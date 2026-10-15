@@ -77,14 +77,23 @@ def checkpoint_yukle(
 
     random.setstate(durum["python_random_state"])
     np.random.set_state(durum["numpy_random_state"])
-    torch.set_rng_state(durum["torch_rng_state"])
+    # map_location=cihaz, checkpoint içindeki RNG ByteTensor'larını da
+    # CUDA'ya taşıyabilir. CPU RNG ve DataLoader generator durumları ise
+    # CPU ByteTensor bekler. Bu nedenle açıkça CPU'ya geri alınır.
+    torch_rng_state = durum["torch_rng_state"].detach().cpu()
+    torch.set_rng_state(torch_rng_state)
 
     if torch.cuda.is_available() and durum.get("cuda_rng_state_all") is not None:
-        torch.cuda.set_rng_state_all(durum["cuda_rng_state_all"])
+        cuda_rng_state_all = [
+            rng_durumu.detach().cpu()
+            for rng_durumu in durum["cuda_rng_state_all"]
+        ]
+        torch.cuda.set_rng_state_all(cuda_rng_state_all)
 
     loader_generator = getattr(train_loader, "generator", None)
     if loader_generator is not None and durum.get("loader_generator_state") is not None:
-        loader_generator.set_state(durum["loader_generator_state"])
+        loader_generator_state = durum["loader_generator_state"].detach().cpu()
+        loader_generator.set_state(loader_generator_state)
 
     tamamlanan_epoch = int(durum["epoch"])
     kayitlar = list(durum.get("kayitlar", []))
