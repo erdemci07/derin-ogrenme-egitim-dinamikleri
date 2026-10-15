@@ -24,6 +24,10 @@ seçilmelidir.
 
 Benchmark scripti CUDA yoksa çalışmayı durdurur. T4 dışında bir GPU verilirse bunu ayrıca uyarı olarak bildirir.
 
+## GitHub erişimi
+
+Repo public olduğu için GitHub tokenı veya Colab Secret kullanılmaz. Notebook `main` dalını doğrudan klonlar ve kullanılan commit SHA'sını benchmark metadata'sına kaydeder.
+
 ## Benchmark ayarları
 
 Varsayılan:
