@@ -196,7 +196,7 @@ def _saat(epoch_sayisi: int, saniye_epoch: float) -> float:
     return epoch_sayisi * saniye_epoch / 3600.0
 
 
-def ana() -> None:
+def ana(argv=None) -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--warmup-epoch", type=int, default=1)
     parser.add_argument("--olcum-epoch", type=int, default=3)
@@ -207,7 +207,7 @@ def ana() -> None:
         "--cikti",
         default="sonuclar/benchmark_colab_t4/benchmark_t4.json",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if not torch.cuda.is_available():
         raise RuntimeError(
