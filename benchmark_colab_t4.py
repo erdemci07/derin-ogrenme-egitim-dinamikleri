@@ -204,10 +204,21 @@ def ana(argv=None) -> None:
     parser.add_argument("--num-workers", type=int, default=2)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument(
+        "--veri-klasoru",
+        default=None,
+        help=(
+            "Colab/Drive veri kökü. Verilirse TEZ_VERI_KLASORU olarak "
+            "ayarlanır ve CIFAR-10 internetten indirilmez."
+        ),
+    )
+    parser.add_argument(
         "--cikti",
         default="sonuclar/benchmark_colab_t4/benchmark_t4.json",
     )
     args = parser.parse_args(argv)
+
+    if args.veri_klasoru:
+        os.environ["TEZ_VERI_KLASORU"] = str(Path(args.veri_klasoru))
 
     if not torch.cuda.is_available():
         raise RuntimeError(
@@ -233,6 +244,8 @@ def ana(argv=None) -> None:
     print("cuDNN:", torch.backends.cudnn.version(), flush=True)
     print("nvidia-smi:", _nvidia_smi(), flush=True)
 
+    etkin_veri_koku = os.environ.get("TEZ_VERI_KLASORU", "veriler")
+    print(f"Veri kaynağı: {etkin_veri_koku}", flush=True)
     print("\n[1/3] CIFAR-10 veri seti hazırlanıyor...", flush=True)
     veri_baslangic = time.perf_counter()
 
