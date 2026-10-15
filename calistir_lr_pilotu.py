@@ -195,7 +195,7 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
         checkpoint_dosyasi.unlink()
 
 
-def ana() -> None:
+def ana(argv=None) -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--calistir",
@@ -208,11 +208,22 @@ def ana() -> None:
         default=None,
         help="Teknik kontrol için yalnız ilk N koşuyu çalıştırır.",
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--epoch",
+        type=int,
+        default=None,
+        help="Yalnız teknik entegrasyon testi için epoch sayısını geçici olarak ezer.",
+    )
+    args = parser.parse_args(argv)
 
     ayarlar = yaml.safe_load(
         Path("ayarlar/lr_pilotu.yaml").read_text(encoding="utf-8")
     )
+    if args.epoch is not None:
+        if args.epoch <= 0:
+            raise ValueError("--epoch pozitif olmalıdır.")
+        ayarlar["egitim"]["epoch"] = int(args.epoch)
+
     plan = deney_plani(ayarlar)
 
     print(f"Toplam planlanan koşu: {len(plan)}")
