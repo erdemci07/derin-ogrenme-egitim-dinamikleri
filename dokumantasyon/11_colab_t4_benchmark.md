@@ -28,6 +28,23 @@ Benchmark scripti CUDA yoksa çalışmayı durdurur. T4 dışında bir GPU veril
 
 Repo public olduğu için GitHub tokenı veya Colab Secret kullanılmaz. Notebook GitHub public API'sinden `main` dalının commit SHA'sını alır ve public arşivi indirir; böylece `git clone` bağımlılığı olmadan kullanılan commit benchmark metadata'sına kaydedilir.
 
+## Google Drive veri kaynağı
+
+Colab deneylerinde ortak veri kökü:
+
+`/content/drive/MyDrive/tez_datasets`
+
+olarak kullanılır.
+
+CIFAR-10 bu klasörden okunur ve Colab oturumlarında yeniden internetten indirilmez. Yükleyici aşağıdaki iki standart yapıyı destekler:
+
+- `tez_datasets/cifar-10-batches-py/` — çıkarılmış veri seti
+- `tez_datasets/cifar-10-python.tar.gz` — standart arşiv; ilk kullanımda Drive üzerinde bir kez açılır
+
+Bu iki yapıdan hiçbiri yoksa çalışma ağdan veri indirmek yerine açık hata ile durur.
+
+Yerel Windows kullanımında `TEZ_VERI_KLASORU` tanımlı olmadığı için mevcut `veriler/` davranışı korunur.
+
 ## Benchmark ayarları
 
 Varsayılan:
