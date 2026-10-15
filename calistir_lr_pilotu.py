@@ -17,12 +17,14 @@ from __future__ import annotations
 
 import argparse
 import math
+import os
 from pathlib import Path
 
 import torch
 import yaml
 from torch import nn
 
+from kaynak_kod.checkpoint import checkpoint_kaydet, checkpoint_yukle
 from kaynak_kod.cnn_modeli import CNNv1
 from kaynak_kod.egitim import bir_epoch_egit, dogrula
 from kaynak_kod.kayit_sistemi import epoch_csv_kaydet, json_kaydet, klasor_hazirla
@@ -60,8 +62,11 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
     seed = kosu["seed"]
     sabit_seed_ayarla(seed)
 
-    cikti = Path(ayarlar["cikti"]["klasor"]) / kosu["run_id"]
+    varsayilan_cikti = Path(ayarlar["cikti"]["klasor"])
+    cikti_koku = Path(os.environ.get("TEZ_CIKTI_KLASORU", str(varsayilan_cikti)))
+    cikti = cikti_koku / kosu["run_id"]
     tamamlandi = cikti / "tamamlandi.json"
+    checkpoint_dosyasi = cikti / "checkpoint.pt"
 
     if tamamlandi.exists():
         print(f"[ATLA] {kosu['run_id']} daha önce tamamlanmış.")
@@ -88,9 +93,23 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
         weight_decay=float(ayarlar["egitim"]["weight_decay"]),
     )
 
-    kayitlar = []
+    baslangic_epoch, kayitlar = checkpoint_yukle(
+        checkpoint_dosyasi,
+        model=model,
+        optimizer=optimizer,
+        train_loader=train_loader,
+        cihaz=cihaz,
+        beklenen_run_id=kosu["run_id"],
+    )
 
-    for epoch in range(1, int(ayarlar["egitim"]["epoch"]) + 1):
+    if baslangic_epoch > 1:
+        print(
+            f"[DEVAM] {kosu['run_id']} checkpoint bulundu; "
+            f"epoch {baslangic_epoch}'den devam ediliyor.",
+            flush=True,
+        )
+
+    for epoch in range(baslangic_epoch, int(ayarlar["egitim"]["epoch"]) + 1):
         train = bir_epoch_egit(model, train_loader, kayip_fonksiyonu, optimizer, cihaz)
         val = dogrula(model, val_loader, kayip_fonksiyonu, cihaz)
 
@@ -101,10 +120,22 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
             "validation_loss": val["loss"],
             "validation_accuracy": val["accuracy"],
             "learning_rate": kosu["learning_rate"],
-            "epoch_seconds": train["seconds"],
+            "train_seconds": train["seconds"],
+            "validation_seconds": val["seconds"],
+            "epoch_seconds": train["seconds"] + val["seconds"],
         }
         kayitlar.append(satir)
         epoch_csv_kaydet(cikti / "epoch_sonuclari.csv", kayitlar)
+
+        checkpoint_kaydet(
+            checkpoint_dosyasi,
+            model=model,
+            optimizer=optimizer,
+            epoch=epoch,
+            kayitlar=kayitlar,
+            train_loader=train_loader,
+            run_id=kosu["run_id"],
+        )
 
         if not all(
             math.isfinite(float(satir[alan]))
@@ -138,10 +169,15 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
             "final_validation_loss": son["validation_loss"],
             "final_validation_accuracy": son["validation_accuracy"],
             "cihaz": str(cihaz),
+            "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
             "pytorch_surumu": torch.__version__,
             "cuda_surumu": torch.version.cuda,
+            "git_commit": os.environ.get("TEZ_GIT_COMMIT", "unknown"),
         },
     )
+
+    if checkpoint_dosyasi.exists():
+        checkpoint_dosyasi.unlink()
 
 
 def ana() -> None:
