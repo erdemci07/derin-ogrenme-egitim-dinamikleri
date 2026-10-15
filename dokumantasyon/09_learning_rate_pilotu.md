@@ -95,3 +95,12 @@ Tüm 60 koşuyu başlatmak için:
 ```
 
 CPU üzerinde tam pilotun çalıştırılması önerilmez. Ana pilot GPU ortamında çalıştırılmalıdır.
+
+
+## Aşama 1 sonrası ölçüm güncellemesi
+
+LR pilotunda validation accuracy/loss yanında macro precision, macro recall ve macro F1 da kaydedilir.
+
+AULC ve kendi en iyi validation değerinin %95'ine ulaşma epochu teknik olarak hesaplanır ve arşivlenir. Ancak **AULC kaydedilir ancak learning-rate seçimi için kullanılmaz**. LR seçimi önceden tanımlanan kurala göre 30. epoch validation accuracy üzerinden yapılır; validation loss yalnız ikincil ölçüttür.
+
+Gradyan/aktivasyon probe ölçümleri ana yakınsama analizi için doğrulanmış olmakla birlikte LR seçim kriterine dahil edilmez.
