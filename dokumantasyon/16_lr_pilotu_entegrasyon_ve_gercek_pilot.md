@@ -49,7 +49,7 @@ Toplam:
 - seed 42
 - 60 koşu
 
-Colab oturumları arasında Drive checkpoint ve tamamlandı kayıtları kullanılarak devam eder.
+Notebook tamamlanan koşuları atlar ve yarım koşuyu checkpointten sürdürür; runtime kesilmezse 60/60 tamamlanana kadar devam eder.
 
 ## LR seçim kuralı
 
@@ -71,3 +71,8 @@ Ana deneyde kullanılacak ikincil ortak eşik, LR pilotu tamamlandıktan sonra:
 olarak hesaplanır ve ana deney başlamadan önce dondurulur.
 
 AULC ana yakınsama ölçülerinden biri olmaya devam eder; ortak eşik tamamlayıcı bir hız ölçüsüdür.
+
+
+## Kapsam notu
+
+Tez önerisine bağlı sade protokolde ek 30 LR doğrulama koşusu varsayılan plana dahil değildir. LR taraması ReLU, GELU ve Mish temsilci aktivasyonlarıyla yapılır; seçilen optimizer-bazlı LR değerleri ana deneylerde altı aktivasyonun tamamında sabit tutulur. Yalnız açık bir kararsızlık veya teknik sorun görülürse ek doğrulama düşünülür.
