@@ -54,8 +54,10 @@ def ana(argv=None) -> None:
     cikti = Path(args.cikti_klasoru)
     cikti.mkdir(parents=True, exist_ok=True)
 
-    tamamlanan = []
-    kararsizlar = []
+    # Google Drive aynı ada sahip klasörler oluşturabildiği için kayıtları
+    # run_id bazında tekilleştiriyoruz. Sağlıklı tamamlanmış kayıt varsa önceliklidir.
+    tamamlanan_by_run = {}
+    kararsiz_by_run = {}
 
     for run_dir in sorted(pilot.iterdir() if pilot.exists() else []):
         if not run_dir.is_dir():
@@ -67,11 +69,18 @@ def ana(argv=None) -> None:
         if tamam.exists():
             veri = _json_oku(tamam)
             veri["run_klasoru"] = run_dir.name
-            tamamlanan.append(veri)
+            run_id = veri["run_id"]
+            tamamlanan_by_run[run_id] = veri
+            kararsiz_by_run.pop(run_id, None)
         elif kararsiz.exists():
             veri = _json_oku(kararsiz)
             veri["run_klasoru"] = run_dir.name
-            kararsizlar.append(veri)
+            run_id = veri["run_id"]
+            if run_id not in tamamlanan_by_run:
+                kararsiz_by_run.setdefault(run_id, veri)
+
+    tamamlanan = list(tamamlanan_by_run.values())
+    kararsizlar = list(kararsiz_by_run.values())
 
     beklenen_toplam = (
         len(BEKLENEN_OPTIMIZERLAR)
@@ -79,8 +88,11 @@ def ana(argv=None) -> None:
         * 4
     )
 
-    print(f"Tamamlanan: {len(tamamlanan)}/{beklenen_toplam}")
-    print(f"Kararsız: {len(kararsizlar)}")
+    degerlendirilen = len(tamamlanan) + len(kararsizlar)
+    print(
+        f"Değerlendirilen: {degerlendirilen}/{beklenen_toplam} "
+        f"({len(tamamlanan)} sağlıklı, {len(kararsizlar)} kararsız/uygunsuz)"
+    )
 
     if len(tamamlanan) + len(kararsizlar) < beklenen_toplam:
         raise RuntimeError(
