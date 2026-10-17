@@ -44,8 +44,15 @@ def deney_plani(ayarlar: dict) -> list[dict]:
     plan = []
     seed = int(ayarlar["egitim"]["seed"])
 
+    aktivasyonlar = ayarlar["model"].get(
+        "aktivasyonlar",
+        ayarlar["model"].get("temsilci_aktivasyonlar"),
+    )
+    if not aktivasyonlar:
+        raise ValueError("Ayar dosyasında model.aktivasyonlar tanımlanmalıdır.")
+
     for optimizer, lr_listesi in ayarlar["learning_rate_adaylari"].items():
-        for aktivasyon in ayarlar["model"]["temsilci_aktivasyonlar"]:
+        for aktivasyon in aktivasyonlar:
             for lr in lr_listesi:
                 plan.append(
                     {
@@ -210,7 +217,12 @@ def ana(argv=None) -> None:
     parser.add_argument(
         "--calistir",
         action="store_true",
-        help="Verilmezse yalnızca 60 koşuluk pilot planını gösterir.",
+        help="Verilmezse yalnızca pilot planını gösterir.",
+    )
+    parser.add_argument(
+        "--ayarlar-dosyasi",
+        default="ayarlar/lr_pilotu.yaml",
+        help="Pilot ayar YAML dosyası. Varsayılan: ayarlar/lr_pilotu.yaml",
     )
     parser.add_argument(
         "--maksimum-run",
@@ -235,9 +247,9 @@ def ana(argv=None) -> None:
     )
     args = parser.parse_args(argv)
 
-    ayarlar = yaml.safe_load(
-        Path("ayarlar/lr_pilotu.yaml").read_text(encoding="utf-8")
-    )
+    ayarlar_yolu = Path(args.ayarlar_dosyasi)
+    ayarlar = yaml.safe_load(ayarlar_yolu.read_text(encoding="utf-8"))
+    print(f"Ayar dosyası: {ayarlar_yolu}", flush=True)
     if args.epoch is not None:
         if args.epoch <= 0:
             raise ValueError("--epoch pozitif olmalıdır.")
