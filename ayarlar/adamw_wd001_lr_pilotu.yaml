@@ -1,0 +1,41 @@
+deney_grubu: ADAMW-WD001-LR-DOGRULAMA
+aciklama: "AdamW'nin decoupled weight decay mekanizmasını etkin kullanarak LR'yi yeniden doğrulayan 24 koşuluk pilot."
+
+veri:
+  veri_klasoru: veriler
+  split_dosyasi: ayarlar/cifar10_split.json
+  stats_dosyasi: ayarlar/cifar10_stats.json
+  batch_size: 128
+  num_workers: 0
+  split_seed: 2026
+
+model:
+  mimari: cnn_v1
+  aktivasyonlar:
+    - relu
+    - leaky_relu
+    - elu
+    - gelu
+    - swish
+    - mish
+
+egitim:
+  seed: 42
+  epoch: 30
+  weight_decay: 0.01
+
+learning_rate_adaylari:
+  adamw:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+
+secim_kurali:
+  birincil: "30. epoch validation accuracy ortalaması"
+  ikincil: "30. epoch validation loss ortalaması"
+  eleme: "NaN, Inf veya sayısal olarak kararsız koşular"
+  not: "AdamW weight_decay=0.01 sabitlenerek yalnız LR yeniden doğrulanır; test seti kullanılmaz."
+
+cikti:
+  klasor: sonuclar/ham_veriler/adamw_wd001_lr_pilotu
