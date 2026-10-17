@@ -1,0 +1,58 @@
+deney_grubu: LR-PILOT-CIFAR10-KALAN-60
+aciklama: "Tam 120 LR taramasının ikinci yarısı: Leaky ReLU, ELU ve Swish."
+
+veri:
+  veri_klasoru: veriler
+  split_dosyasi: ayarlar/cifar10_split.json
+  stats_dosyasi: ayarlar/cifar10_stats.json
+  batch_size: 128
+  num_workers: 0
+  split_seed: 2026
+
+model:
+  mimari: cnn_v1
+  aktivasyonlar:
+    - leaky_relu
+    - elu
+    - swish
+
+egitim:
+  seed: 42
+  epoch: 30
+  weight_decay: 0.0
+
+learning_rate_adaylari:
+  sgd:
+    - 0.003
+    - 0.01
+    - 0.03
+    - 0.1
+  momentum_sgd:
+    - 0.003
+    - 0.01
+    - 0.03
+    - 0.1
+  rmsprop:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+  adam:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+  adamw:
+    - 0.0001
+    - 0.0003
+    - 0.001
+    - 0.003
+
+secim_kurali:
+  birincil: "30. epoch validation accuracy ortalaması"
+  ikincil: "30. epoch validation loss ortalaması"
+  eleme: "NaN, Inf veya sayısal olarak kararsız koşular"
+  not: "Nihai LR seçimi ilk ve ikinci 60 birlikte, altı aktivasyon üzerinden yapılır."
+
+cikti:
+  klasor: sonuclar/ham_veriler/lr_pilotu_kalan_60
