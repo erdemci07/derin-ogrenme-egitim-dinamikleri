@@ -68,10 +68,19 @@ def tek_kosu(ayarlar: dict, kosu: dict, cihaz: torch.device) -> None:
     cikti_koku = Path(os.environ.get("TEZ_CIKTI_KLASORU", str(varsayilan_cikti)))
     cikti = cikti_koku / kosu["run_id"]
     tamamlandi = cikti / "tamamlandi.json"
+    kararsiz = cikti / "kararsiz.json"
     checkpoint_dosyasi = cikti / "checkpoint.pt"
 
     if tamamlandi.exists():
         print(f"[ATLA] {kosu['run_id']} daha önce tamamlanmış.")
+        return
+
+    if kararsiz.exists():
+        print(
+            f"[ATLA-KARARSIZ] {kosu['run_id']} daha önce NaN/Inf nedeniyle "
+            "uygunsuz olarak işaretlenmiş; yeniden çalıştırılmıyor.",
+            flush=True,
+        )
         return
 
     klasor_hazirla(cikti)
@@ -271,8 +280,15 @@ def ana(argv=None) -> None:
         (cikti_koku / kosu["run_id"] / "tamamlandi.json").exists()
         for kosu in plan
     )
+    kararsiz_baslangic = sum(
+        (cikti_koku / kosu["run_id"] / "kararsiz.json").exists()
+        and not (cikti_koku / kosu["run_id"] / "tamamlandi.json").exists()
+        for kosu in plan
+    )
+    degerlendirilen_baslangic = tamamlanan_baslangic + kararsiz_baslangic
     print(
-        f"\nPilot ilerleme: {tamamlanan_baslangic}/{len(plan)} koşu tamamlandı.",
+        f"\nPilot ilerleme: {degerlendirilen_baslangic}/{len(plan)} değerlendirildi "
+        f"({tamamlanan_baslangic} sağlıklı, {kararsiz_baslangic} kararsız/uygunsuz).",
         flush=True,
     )
 
@@ -296,15 +312,30 @@ def ana(argv=None) -> None:
         (cikti_koku / kosu["run_id"] / "tamamlandi.json").exists()
         for kosu in plan
     )
+    kararsiz_son = sum(
+        (cikti_koku / kosu["run_id"] / "kararsiz.json").exists()
+        and not (cikti_koku / kosu["run_id"] / "tamamlandi.json").exists()
+        for kosu in plan
+    )
+    degerlendirilen_son = tamamlanan_son + kararsiz_son
+
     print(
-        f"\nPilot ilerleme: {tamamlanan_son}/{len(plan)} koşu tamamlandı.",
+        f"\nPilot ilerleme: {degerlendirilen_son}/{len(plan)} değerlendirildi "
+        f"({tamamlanan_son} sağlıklı, {kararsiz_son} kararsız/uygunsuz).",
         flush=True,
     )
-    if tamamlanan_son < len(plan):
+
+    if degerlendirilen_son < len(plan):
         print(
             "Pilot henüz tamamlanmadı. Aynı Colab notebooku sonraki T4 "
             "oturumunda yeniden çalıştırın; tamamlanan koşular atlanacak, "
             "yarım koşu checkpointten devam edecektir.",
+            flush=True,
+        )
+    elif kararsiz_son:
+        print(
+            "Pilot tamamlandı. NaN/Inf üreten koşular geçersiz aday olarak "
+            "işaretlendi ve yeniden çalıştırılmayacak.",
             flush=True,
         )
 
