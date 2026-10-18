@@ -30,7 +30,9 @@ def optimizasyon_olustur(
             parametreler,
             lr=learning_rate,
             momentum=0.0,
+            dampening=0.0,
             weight_decay=weight_decay,
+            nesterov=False,
         )
 
     if ad == "momentum_sgd":
@@ -38,7 +40,9 @@ def optimizasyon_olustur(
             parametreler,
             lr=learning_rate,
             momentum=0.9,
+            dampening=0.0,
             weight_decay=weight_decay,
+            nesterov=False,
         )
 
     if ad == "rmsprop":
@@ -46,7 +50,9 @@ def optimizasyon_olustur(
             parametreler,
             lr=learning_rate,
             alpha=0.99,
+            eps=1e-8,
             momentum=0.0,
+            centered=False,
             weight_decay=weight_decay,
         )
 
@@ -55,7 +61,9 @@ def optimizasyon_olustur(
             parametreler,
             lr=learning_rate,
             betas=(0.9, 0.999),
+            eps=1e-8,
             weight_decay=weight_decay,
+            amsgrad=False,
         )
 
     if ad == "adamw":
@@ -63,7 +71,9 @@ def optimizasyon_olustur(
             parametreler,
             lr=learning_rate,
             betas=(0.9, 0.999),
+            eps=1e-8,
             weight_decay=weight_decay,
+            amsgrad=False,
         )
 
     raise ValueError(
