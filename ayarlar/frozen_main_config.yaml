@@ -7,6 +7,7 @@ protokol:
   dondurma_tarihi: "2026-10-18"
   amac: "Aktivasyon fonksiyonu x optimizasyon algoritması etkileşimini kontrollü biçimde karşılaştırmak."
   test_seti_ayar_seciminde_kullanilmaz: true
+  metadata_duzeltmesi: "Flowers veri kaynağı tez önerisiyle uyumlu alxmamaev/flowers-recognition olarak düzeltildi; model, optimizer, LR, epoch, batch ve seed değerleri değiştirilmedi."
 
 model:
   mimari: cnn_v1
@@ -104,7 +105,11 @@ veri_setleri:
     train_augmentation: "Resize(32x32) + RandomCrop(32,padding=4) + RandomHorizontalFlip(0.5)"
   flowers5:
     sinif_sayisi: 5
-    kaynak: "Kaggle: kausthubkannan/5-flower-types-classification-dataset"
+    kaynak: "Kaggle: alxmamaev/flowers-recognition (Version 2)"
+    kaynak_arsivi: "flowers5.zip"
+    kaynak_sha256: "eb9a26fc06854affdd50ea1f7987ab6676f22f6f80c3a71f175249fdc8e888a3"
+    siniflar: "daisy, dandelion, rose, sunflower, tulip"
+    toplam_goruntu: 4317
     split: "stratified %80 train + %10 validation + %10 test"
     train_augmentation: "Resize(32x32) + RandomCrop(32,padding=4) + RandomHorizontalFlip(0.5)"
 
