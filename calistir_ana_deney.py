@@ -268,6 +268,11 @@ def tek_kosu(
     klasor_hazirla(cikti)
     paket = _veri_paketi(cfg, kosu["veri_seti"], kosu["seed"])
 
+    # Split/normalizasyon hazırlığının olası RNG tüketimi model başlangıcını
+    # etkilemesin. Aynı seed içindeki tüm kombinasyonlar aynı başlangıç
+    # rastgelelik durumundan model kurmaya başlar.
+    sabit_seed_ayarla(kosu["seed"])
+
     model = CNNv1(
         kosu["aktivasyon"],
         sinif_sayisi=paket.sinif_sayisi,
