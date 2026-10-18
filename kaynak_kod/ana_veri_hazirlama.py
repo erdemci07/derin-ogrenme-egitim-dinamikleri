@@ -10,9 +10,13 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
 import os
+import shutil
+import struct
+import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -59,6 +63,276 @@ def _json_yaz(yol: Path, veri: dict[str, Any]) -> None:
 def _indeks_hash(*indeks_gruplari: list[int]) -> str:
     ham = json.dumps(indeks_gruplari, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(ham).hexdigest()
+
+
+MNIST_ARSIVLERI = {
+    "train-images-idx3-ubyte.gz": {
+        "md5": "f68b3c2dcbeaaa9fbdd348bbdeb94873",
+        "magic": 2051,
+        "count": 60000,
+        "rows": 28,
+        "cols": 28,
+    },
+    "train-labels-idx1-ubyte.gz": {
+        "md5": "d53e105ee54ea40749a09fcbcd1e9432",
+        "magic": 2049,
+        "count": 60000,
+    },
+    "t10k-images-idx3-ubyte.gz": {
+        "md5": "9fb629c4189551a2d022fa330f9573f3",
+        "magic": 2051,
+        "count": 10000,
+        "rows": 28,
+        "cols": 28,
+    },
+    "t10k-labels-idx1-ubyte.gz": {
+        "md5": "ec29112dd5afa0611ce80d1b7f02629c",
+        "magic": 2049,
+        "count": 10000,
+    },
+}
+
+GORUNTU_UZANTILARI = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
+ANIMALS10_SINIF_SAYILARI = {
+    "cane": 4863,
+    "cavallo": 2623,
+    "elefante": 1446,
+    "farfalla": 2112,
+    "gallina": 3098,
+    "gatto": 1668,
+    "mucca": 1866,
+    "pecora": 1820,
+    "ragno": 4821,
+    "scoiattolo": 1862,
+}
+
+FLOWERS5_SINIF_SAYILARI = {
+    "lilly": 1000,
+    "lotus": 1000,
+    "orchid": 1000,
+    "sunflower": 1000,
+    "tulip": 1000,
+}
+
+
+def _dosya_md5(yol: Path) -> str:
+    h = hashlib.md5()
+    with yol.open("rb") as f:
+        for parca in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(parca)
+    return h.hexdigest()
+
+
+def _mnist_idx_dogrula(raw_dosyasi: Path, beklenen: dict[str, Any]) -> None:
+    with raw_dosyasi.open("rb") as f:
+        baslik = f.read(16)
+
+    if len(baslik) < 8:
+        raise ValueError(f"MNIST IDX dosyası çok kısa: {raw_dosyasi}")
+
+    magic = struct.unpack(">I", baslik[:4])[0]
+    count = struct.unpack(">I", baslik[4:8])[0]
+    if magic != int(beklenen["magic"]) or count != int(beklenen["count"]):
+        raise ValueError(
+            f"MNIST IDX başlığı uyuşmuyor: {raw_dosyasi.name} | "
+            f"magic={magic}, count={count}"
+        )
+
+    if magic == 2051:
+        if len(baslik) < 16:
+            raise ValueError(f"MNIST görüntü başlığı eksik: {raw_dosyasi}")
+        rows, cols = struct.unpack(">II", baslik[8:16])
+        if rows != int(beklenen["rows"]) or cols != int(beklenen["cols"]):
+            raise ValueError(
+                f"MNIST görüntü boyutu uyuşmuyor: {raw_dosyasi.name} | "
+                f"{rows}x{cols}"
+            )
+
+
+def _mnist_drive_verisini_hazirla(veri_koku: Path) -> tuple[Path, str]:
+    """Drive'daki dört resmi MNIST .gz dosyasını doğrular ve yerelde hazırlar."""
+    kaynak = veri_koku / "mnist"
+    if not kaynak.is_dir():
+        raise FileNotFoundError(f"MNIST Drive klasörü bulunamadı: {kaynak}")
+
+    calisma_koku = Path(
+        os.environ.get("TEZ_MNIST_CALISMA_KOKU", "/content/tez_mnist")
+    )
+    raw = calisma_koku / "MNIST" / "raw"
+    raw.mkdir(parents=True, exist_ok=True)
+
+    dogrulanan_md5 = {}
+    for ad, beklenen in MNIST_ARSIVLERI.items():
+        src = kaynak / ad
+        if not src.is_file():
+            raise FileNotFoundError(f"MNIST kaynak dosyası eksik: {src}")
+
+        gercek_md5 = _dosya_md5(src)
+        if gercek_md5 != beklenen["md5"]:
+            raise ValueError(
+                f"MNIST dosyası resmi torchvision sürümüyle uyuşmuyor: {ad} | "
+                f"md5={gercek_md5}, beklenen={beklenen['md5']}"
+            )
+        dogrulanan_md5[ad] = gercek_md5
+
+        hedef = raw / ad.removesuffix(".gz")
+        if not hedef.is_file():
+            print(f"MNIST Drive arşivi açılıyor: {ad}", flush=True)
+            gecici = hedef.with_suffix(hedef.suffix + ".tmp")
+            with gzip.open(src, "rb") as giris, gecici.open("wb") as cikis:
+                shutil.copyfileobj(giris, cikis, length=1024 * 1024)
+            os.replace(gecici, hedef)
+
+        _mnist_idx_dogrula(hedef, beklenen)
+
+    fingerprint = hashlib.sha256(
+        json.dumps(
+            dogrulanan_md5,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    return calisma_koku, fingerprint
+
+
+def _zip_guvenli_cikar(arsiv: Path, hedef: Path) -> None:
+    """ZIP içeriğini path traversal'a izin vermeden çıkarır; CRC hatası yükselir."""
+    hedef = hedef.resolve()
+    with zipfile.ZipFile(arsiv, "r") as z:
+        if not z.infolist():
+            raise ValueError(f"ZIP arşivi boş: {arsiv}")
+        for info in z.infolist():
+            aday = (hedef / info.filename).resolve()
+            if aday != hedef and hedef not in aday.parents:
+                raise ValueError(f"Güvensiz ZIP yolu bulundu: {info.filename}")
+        z.extractall(hedef)
+
+
+def _imagefolder_koku_bul(
+    arama_koku: Path,
+    beklenen_siniflar: set[str],
+) -> Path:
+    """Arşiv içinde doğrudan beklenen sınıf klasörlerini taşıyan kökü bulur."""
+    beklenen = {x.casefold() for x in beklenen_siniflar}
+    adaylar = [arama_koku] + [
+        p for p in arama_koku.rglob("*") if p.is_dir()
+    ]
+
+    uygun = []
+    for d in adaylar:
+        try:
+            alt = [p for p in d.iterdir() if p.is_dir()]
+        except OSError:
+            continue
+        adlar = {p.name.casefold() for p in alt}
+        if adlar != beklenen:
+            continue
+
+        toplam = 0
+        bos = False
+        for sinif_dir in alt:
+            n = sum(
+                1
+                for p in sinif_dir.rglob("*")
+                if p.is_file() and p.suffix.lower() in GORUNTU_UZANTILARI
+            )
+            if n == 0:
+                bos = True
+                break
+            toplam += n
+        if not bos:
+            uygun.append((toplam, d))
+
+    if not uygun:
+        raise ValueError(
+            "Beklenen sınıf klasörlerini içeren ImageFolder kökü bulunamadı: "
+            f"{sorted(beklenen_siniflar)}"
+        )
+
+    uygun.sort(key=lambda x: x[0], reverse=True)
+    return uygun[0][1]
+
+
+def _imagefolder_sayim_dogrula(
+    kok: Path,
+    beklenen_sayilar: dict[str, int],
+    dataset_adi: str,
+) -> dict[str, int]:
+    gercek = {}
+    for sinif_dir in [p for p in kok.iterdir() if p.is_dir()]:
+        gercek[sinif_dir.name.casefold()] = sum(
+            1
+            for p in sinif_dir.rglob("*")
+            if p.is_file() and p.suffix.lower() in GORUNTU_UZANTILARI
+        )
+
+    beklenen = {k.casefold(): int(v) for k, v in beklenen_sayilar.items()}
+    if gercek != beklenen:
+        raise ValueError(
+            f"{dataset_adi} sınıf/görüntü sayıları beklenen sürümle uyuşmuyor. "
+            f"Bulunan={gercek}, beklenen={beklenen}"
+        )
+    return gercek
+
+
+def _drive_zip_imagefolder_hazirla(
+    veri_koku: Path,
+    dataset_adi: str,
+) -> Path:
+    """Drive'daki Animals-10 / Flowers-5 ZIP arşivini yerelde doğrulayıp açar."""
+    if dataset_adi == "animals10":
+        arsiv_adlari = ("animals10.zip",)
+        beklenen_sayilar = ANIMALS10_SINIF_SAYILARI
+        beklenen_arsiv_boyutu = 614087302
+    elif dataset_adi == "flowers5":
+        arsiv_adlari = (
+            "flowers5.zip",
+            "5-flower-types-classification-dataset.zip",
+        )
+        beklenen_sayilar = FLOWERS5_SINIF_SAYILARI
+        beklenen_arsiv_boyutu = None
+    else:
+        raise ValueError(f"Desteklenmeyen ZIP veri seti: {dataset_adi}")
+
+    bulunan = [veri_koku / ad for ad in arsiv_adlari if (veri_koku / ad).is_file()]
+    if len(bulunan) != 1:
+        raise FileNotFoundError(
+            f"{dataset_adi} için Drive üzerinde tam bir kaynak ZIP bekleniyor. "
+            f"Aranan adlar: {arsiv_adlari}; bulunan: {bulunan}"
+        )
+    arsiv = bulunan[0]
+
+    if beklenen_arsiv_boyutu is not None and arsiv.stat().st_size != beklenen_arsiv_boyutu:
+        raise ValueError(
+            f"{dataset_adi} ZIP boyutu beklenen Kaggle sürümüyle uyuşmuyor: "
+            f"{arsiv.stat().st_size} != {beklenen_arsiv_boyutu}"
+        )
+    if not zipfile.is_zipfile(arsiv):
+        raise ValueError(f"Geçerli ZIP arşivi değil: {arsiv}")
+
+    calisma = Path(f"/content/tez_{dataset_adi}_source")
+    marker = calisma / ".hazir"
+    if not marker.is_file():
+        shutil.rmtree(calisma, ignore_errors=True)
+        calisma.mkdir(parents=True, exist_ok=True)
+        print(
+            f"{dataset_adi}: Drive ZIP yerel Colab diskine açılıyor: {arsiv.name}",
+            flush=True,
+        )
+        _zip_guvenli_cikar(arsiv, calisma)
+        marker.write_text(str(arsiv.stat().st_size), encoding="utf-8")
+
+    kok = _imagefolder_koku_bul(
+        calisma,
+        set(beklenen_sayilar),
+    )
+    _imagefolder_sayim_dogrula(
+        kok,
+        beklenen_sayilar,
+        dataset_adi,
+    )
+    return kok
 
 
 def _data_loader(
@@ -403,13 +677,12 @@ def _mnist_paketi(
     loader_seed: int,
     num_workers: int,
 ) -> AnaVeriPaketi:
-    mnist_koku = veri_koku / "mnist"
-    mnist_koku.mkdir(parents=True, exist_ok=True)
+    mnist_koku, fingerprint = _mnist_drive_verisini_hazirla(veri_koku)
 
     indeks_taban = datasets.MNIST(
         root=str(mnist_koku),
         train=True,
-        download=True,
+        download=False,
         transform=None,
     )
     etiketler = np.asarray(indeks_taban.targets)
@@ -435,7 +708,6 @@ def _mnist_paketi(
         download=False,
         transform=temel_transform,
     )
-    fingerprint = hashlib.sha256(b"torchvision-mnist-official-train-v1").hexdigest()
     mean, std = _stats_al_veya_hesapla(
         dataset_adi="mnist",
         stats_dosyasi=stats_dosyasi,
@@ -470,7 +742,7 @@ def _mnist_paketi(
         root=str(mnist_koku), train=True, download=False, transform=eval_transform
     )
     test_taban = datasets.MNIST(
-        root=str(mnist_koku), train=False, download=True, transform=eval_transform
+        root=str(mnist_koku), train=False, download=False, transform=eval_transform
     )
 
     generator = dataloader_generator(loader_seed)
@@ -501,6 +773,8 @@ def _mnist_paketi(
         sinif_adlari=[str(i) for i in range(10)],
         meta={
             "dataset": "mnist",
+            "source": "Google Drive resmi MNIST IDX .gz arşivleri",
+            "source_fingerprint": fingerprint,
             "train_count": len(train_idx),
             "validation_count": len(val_idx),
             "test_count": len(test_taban),
@@ -511,7 +785,6 @@ def _mnist_paketi(
             "normalization_std": list(std),
         },
     )
-
 
 def _imagefolder_paketi(
     *,
@@ -669,14 +942,15 @@ def ana_veri_yukleyicileri(
 
     if veri_seti in {"animals10", "flowers5"}:
         env_kok = os.environ.get("TEZ_IMAGEFOLDER_KOKU")
-        if not env_kok:
-            raise RuntimeError(
-                f"{veri_seti} için TEZ_IMAGEFOLDER_KOKU ortam değişkeni gerekli."
-            )
+        imagefolder_koku = (
+            Path(env_kok)
+            if env_kok
+            else _drive_zip_imagefolder_hazirla(veri_koku, veri_seti)
+        )
         return _imagefolder_paketi(
             dataset_adi=veri_seti,
             beklenen_sinif_sayisi=10 if veri_seti == "animals10" else 5,
-            imagefolder_koku=Path(env_kok),
+            imagefolder_koku=imagefolder_koku,
             split_dosyasi=split,
             stats_dosyasi=stats,
             batch_size=batch_size,
