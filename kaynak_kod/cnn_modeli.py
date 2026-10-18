@@ -15,8 +15,11 @@ class CNNv1(nn.Module):
     deneyde aktivasyon ve optimizer dışındaki değişken sayısını azaltmaktır.
     """
 
-    def __init__(self, aktivasyon: str) -> None:
+    def __init__(self, aktivasyon: str, sinif_sayisi: int = 10) -> None:
         super().__init__()
+
+        if sinif_sayisi <= 1:
+            raise ValueError("sinif_sayisi en az 2 olmalıdır.")
 
         self.ozellikler = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
@@ -35,7 +38,7 @@ class CNNv1(nn.Module):
             nn.Flatten(),
             nn.Linear(64 * 8 * 8, 256),
             aktivasyon_olustur(aktivasyon),
-            nn.Linear(256, 10),
+            nn.Linear(256, sinif_sayisi),
         )
 
         self._ortak_agirlik_baslatma()
