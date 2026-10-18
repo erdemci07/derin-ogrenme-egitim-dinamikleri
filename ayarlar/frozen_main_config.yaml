@@ -1,0 +1,111 @@
+# ANA DENEY PROTOKOLÜ — DONDURULMUŞ SÜRÜM
+# Bu dosya 120 koşuluk LR taraması ve AdamW weight_decay=0.01 doğrulaması
+# tamamlandıktan sonra, ana 360 koşudan ÖNCE sabitlenmiştir.
+protokol:
+  ad: ANA-CNN-V1
+  surum: "1.0"
+  dondurma_tarihi: "2026-10-18"
+  amac: "Aktivasyon fonksiyonu x optimizasyon algoritması etkileşimini kontrollü biçimde karşılaştırmak."
+  test_seti_ayar_seciminde_kullanilmaz: true
+
+model:
+  mimari: cnn_v1
+  giris_boyutu: 32
+  giris_kanali: 3
+  aktivasyonlar:
+    - relu
+    - leaky_relu
+    - elu
+    - gelu
+    - swish
+    - mish
+  aktivasyon_parametreleri:
+    leaky_relu_negative_slope: 0.01
+    elu_alpha: 1.0
+    gelu_approximate: none
+    swish: "SiLU, beta=1 eşdeğeri"
+    mish: "PyTorch nn.Mish"
+  agirlik_baslatma: "Xavier uniform, gain=1; bias=0"
+  batchnorm: false
+  dropout: false
+
+egitim:
+  epoch: 50
+  batch_size: 128
+  num_workers: 0
+  seeds:
+    - 101
+    - 202
+    - 303
+  split_seed: 2026
+  loss: cross_entropy
+  scheduler: null
+  early_stopping: false
+  not: "Ana seedler, LR pilotunda kullanılan seed=42'den bağımsız seçilmiştir."
+
+optimizerlar:
+  sgd:
+    learning_rate: 0.1
+    momentum: 0.0
+    weight_decay: 0.0
+  momentum_sgd:
+    learning_rate: 0.01
+    momentum: 0.9
+    weight_decay: 0.0
+  rmsprop:
+    learning_rate: 0.001
+    alpha: 0.99
+    eps: 1.0e-08
+    momentum: 0.0
+    weight_decay: 0.0
+  adam:
+    learning_rate: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    eps: 1.0e-08
+    weight_decay: 0.0
+  adamw:
+    learning_rate: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    eps: 1.0e-08
+    weight_decay: 0.01
+
+veri_setleri:
+  cifar10:
+    sinif_sayisi: 10
+    kaynak: "Torchvision CIFAR-10"
+    split: "45.000 train + 5.000 validation; resmi 10.000 test"
+    train_augmentation: "RandomCrop(32,padding=4) + RandomHorizontalFlip(0.5)"
+  mnist:
+    sinif_sayisi: 10
+    kaynak: "Torchvision MNIST"
+    split: "54.000 train + 6.000 validation; resmi 10.000 test"
+    train_augmentation: "Resize(32x32) + RandomCrop(32,padding=4); gri görüntü 3 kanala çoğaltılır"
+  animals10:
+    sinif_sayisi: 10
+    kaynak: "Kaggle: alessiocorrado99/animals10"
+    split: "stratified %80 train + %10 validation + %10 test"
+    train_augmentation: "Resize(32x32) + RandomCrop(32,padding=4) + RandomHorizontalFlip(0.5)"
+  flowers5:
+    sinif_sayisi: 5
+    kaynak: "Kaggle: kausthubkannan/5-flower-types-classification-dataset"
+    split: "stratified %80 train + %10 validation + %10 test"
+    train_augmentation: "Resize(32x32) + RandomCrop(32,padding=4) + RandomHorizontalFlip(0.5)"
+
+degerlendirme:
+  final_metrikler:
+    - accuracy
+    - macro_precision
+    - macro_recall
+    - macro_f1
+    - loss
+  yakinsama:
+    - aulc_normalized
+    - epoch_to_95_own_best
+    - own_best_validation_accuracy
+  sure:
+    - train_seconds
+    - validation_seconds
+  raporlama: "3 bağımsız ana seed üzerinden ortalama ± standart sapma"
+  istatistik: "iki yönlü ANOVA: activation * optimizer"
