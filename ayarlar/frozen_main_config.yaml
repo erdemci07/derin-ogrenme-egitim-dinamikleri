@@ -43,6 +43,14 @@ egitim:
   early_stopping: false
   not: "Ana seedler, LR pilotunda kullanılan seed=42'den bağımsız seçilmiştir."
 
+hiperparametre_secimi:
+  learning_rate_kaynagi: "CIFAR-10 üzerinde ana deneyden önce tamamlanan 120 koşuluk LR pilotu"
+  pilot_seed: 42
+  kapsam: "Her optimizer için tek learning rate; altı aktivasyonun tamamı üzerinden seçildi."
+  veri_setleri_arasi_kural: "Seçilen optimizer-bazlı LR değerleri dört ana veri setinde değiştirilmeden kullanılır."
+  gerekce: "Amaç her veri seti/kombinasyonu ayrı ayrı optimize etmek değil, aktivasyon x optimizer etkileşimini ortak ve önceden sabitlenmiş bir protokol altında karşılaştırmaktır."
+  adamw_dogrulama: "AdamW için weight_decay=0.01 ile 6 aktivasyon x 4 LR = 24 ek doğrulama koşusu tamamlandı; LR=0.001 seçildi."
+
 optimizerlar:
   sgd:
     learning_rate: 0.1
