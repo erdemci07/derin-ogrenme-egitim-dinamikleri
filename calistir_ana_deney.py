@@ -45,11 +45,15 @@ def _optimizer_config_dogrula(cfg: dict) -> None:
         "sgd": {
             "learning_rate": 0.1,
             "momentum": 0.0,
+            "dampening": 0.0,
+            "nesterov": 0.0,
             "weight_decay": 0.0,
         },
         "momentum_sgd": {
             "learning_rate": 0.01,
             "momentum": 0.9,
+            "dampening": 0.0,
+            "nesterov": 0.0,
             "weight_decay": 0.0,
         },
         "rmsprop": {
@@ -57,6 +61,7 @@ def _optimizer_config_dogrula(cfg: dict) -> None:
             "alpha": 0.99,
             "eps": 1e-8,
             "momentum": 0.0,
+            "centered": 0.0,
             "weight_decay": 0.0,
         },
         "adam": {
@@ -64,6 +69,7 @@ def _optimizer_config_dogrula(cfg: dict) -> None:
             "beta1": 0.9,
             "beta2": 0.999,
             "eps": 1e-8,
+            "amsgrad": 0.0,
             "weight_decay": 0.0,
         },
         "adamw": {
@@ -71,6 +77,7 @@ def _optimizer_config_dogrula(cfg: dict) -> None:
             "beta1": 0.9,
             "beta2": 0.999,
             "eps": 1e-8,
+            "amsgrad": 0.0,
             "weight_decay": 0.01,
         },
     }
