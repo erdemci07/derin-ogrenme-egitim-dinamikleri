@@ -5,3 +5,4 @@ scipy
 statsmodels
 matplotlib
 PyYAML
+kagglehub>=1.0.2
