@@ -108,12 +108,15 @@ ANIMALS10_SINIF_SAYILARI = {
 }
 
 FLOWERS5_SINIF_SAYILARI = {
-    "lilly": 1000,
-    "lotus": 1000,
-    "orchid": 1000,
-    "sunflower": 1000,
-    "tulip": 1000,
+    "daisy": 764,
+    "dandelion": 1052,
+    "rose": 784,
+    "sunflower": 733,
+    "tulip": 984,
 }
+
+FLOWERS5_ARSIV_BOYUTU = 235663188
+FLOWERS5_ARSIV_SHA256 = "eb9a26fc06854affdd50ea1f7987ab6676f22f6f80c3a71f175249fdc8e888a3"
 
 
 def _dosya_md5(yol: Path) -> str:
@@ -286,12 +289,9 @@ def _drive_zip_imagefolder_hazirla(
         beklenen_sayilar = ANIMALS10_SINIF_SAYILARI
         beklenen_arsiv_boyutu = 614087302
     elif dataset_adi == "flowers5":
-        arsiv_adlari = (
-            "flowers5.zip",
-            "5-flower-types-classification-dataset.zip",
-        )
+        arsiv_adlari = ("flowers5.zip",)
         beklenen_sayilar = FLOWERS5_SINIF_SAYILARI
-        beklenen_arsiv_boyutu = None
+        beklenen_arsiv_boyutu = FLOWERS5_ARSIV_BOYUTU
     else:
         raise ValueError(f"Desteklenmeyen ZIP veri seti: {dataset_adi}")
 
@@ -310,6 +310,15 @@ def _drive_zip_imagefolder_hazirla(
         )
     if not zipfile.is_zipfile(arsiv):
         raise ValueError(f"Geçerli ZIP arşivi değil: {arsiv}")
+
+    if dataset_adi == "flowers5":
+        gercek_sha256 = hashlib.sha256(arsiv.read_bytes()).hexdigest()
+        if gercek_sha256 != FLOWERS5_ARSIV_SHA256:
+            raise ValueError(
+                "Flowers-5 ZIP SHA256 değeri doğrulanan Kaggle "
+                "alxmamaev/flowers-recognition arşiviyle uyuşmuyor: "
+                f"{gercek_sha256} != {FLOWERS5_ARSIV_SHA256}"
+            )
 
     calisma = Path(f"/content/tez_{dataset_adi}_source")
     marker = calisma / ".hazir"
