@@ -1,0 +1,72 @@
+{
+  "protokol": {
+    "kapsam": "6 aktivasyon x 5 optimizer x 4 LR = 120 pilot koşusu",
+    "birincil": "epoch 30 mean validation accuracy across all 6 activations",
+    "ikincil": "epoch 30 mean validation loss across all 6 activations",
+    "tam_esitlik": "lower learning rate",
+    "kararsiz_aday": "NaN/Inf üreten optimizer-LR adayı uygun sayılmaz",
+    "test_seti_kullanildi": false
+  },
+  "secilen_learning_rate": {
+    "sgd": 0.1,
+    "momentum_sgd": 0.01,
+    "rmsprop": 0.001,
+    "adam": 0.001,
+    "adamw": 0.001
+  },
+  "optimizer_ayrintilari": {
+    "sgd": {
+      "optimizer": "sgd",
+      "learning_rate": 0.1,
+      "uygun": true,
+      "aktivasyon_sayisi": 6,
+      "mean_final_validation_accuracy": 0.8182333333333334,
+      "std_final_validation_accuracy": 0.015033481152266623,
+      "mean_final_validation_loss": 0.5648208992461363,
+      "std_final_validation_loss": 0.03248258493328863
+    },
+    "momentum_sgd": {
+      "optimizer": "momentum_sgd",
+      "learning_rate": 0.01,
+      "uygun": true,
+      "aktivasyon_sayisi": 6,
+      "mean_final_validation_accuracy": 0.8322333333333333,
+      "std_final_validation_accuracy": 0.006557862117760286,
+      "mean_final_validation_loss": 0.5213031040668488,
+      "std_final_validation_loss": 0.019435443902206168
+    },
+    "rmsprop": {
+      "optimizer": "rmsprop",
+      "learning_rate": 0.001,
+      "uygun": true,
+      "aktivasyon_sayisi": 6,
+      "mean_final_validation_accuracy": 0.8274,
+      "std_final_validation_accuracy": 0.014063664766577244,
+      "mean_final_validation_loss": 0.5843867080271244,
+      "std_final_validation_loss": 0.034937893354546494
+    },
+    "adam": {
+      "optimizer": "adam",
+      "learning_rate": 0.001,
+      "uygun": true,
+      "aktivasyon_sayisi": 6,
+      "mean_final_validation_accuracy": 0.8351999999999999,
+      "std_final_validation_accuracy": 0.008456949804746408,
+      "mean_final_validation_loss": 0.5315017271672686,
+      "std_final_validation_loss": 0.031896887818895214
+    },
+    "adamw": {
+      "optimizer": "adamw",
+      "learning_rate": 0.001,
+      "uygun": true,
+      "aktivasyon_sayisi": 6,
+      "mean_final_validation_accuracy": 0.8351999999999999,
+      "std_final_validation_accuracy": 0.008456949804746408,
+      "mean_final_validation_loss": 0.5315017271672686,
+      "std_final_validation_loss": 0.031896887818895214
+    }
+  },
+  "tamamlanan_kosu": 116,
+  "kararsiz_kosu": 4,
+  "degerlendirilen_toplam": 120
+}
