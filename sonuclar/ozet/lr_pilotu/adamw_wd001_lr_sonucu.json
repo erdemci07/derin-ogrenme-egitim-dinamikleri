@@ -1,0 +1,48 @@
+{
+  "optimizer": "adamw",
+  "weight_decay": 0.01,
+  "seed": 42,
+  "epoch": 30,
+  "protokol": "önce en yüksek 30. epoch ortalama validation accuracy; sonra en düşük validation loss; tam eşitlikte düşük LR",
+  "adaylar": [
+    {
+      "learning_rate": 0.0001,
+      "uygun": true,
+      "aktivasyon_sayisi": 6,
+      "mean_final_validation_accuracy": 0.7593,
+      "std_final_validation_accuracy": 0.009981816801898672,
+      "mean_final_validation_loss": 0.6889696749488512,
+      "std_final_validation_loss": 0.029954603399184408
+    },
+    {
+      "learning_rate": 0.0003,
+      "uygun": true,
+      "aktivasyon_sayisi": 6,
+      "mean_final_validation_accuracy": 0.8188,
+      "std_final_validation_accuracy": 0.004982636517614618,
+      "mean_final_validation_loss": 0.543746382701397,
+      "std_final_validation_loss": 0.014657424566582249
+    },
+    {
+      "learning_rate": 0.001,
+      "uygun": true,
+      "aktivasyon_sayisi": 6,
+      "mean_final_validation_accuracy": 0.8409,
+      "std_final_validation_accuracy": 0.006702984409947554,
+      "mean_final_validation_loss": 0.5073397936679422,
+      "std_final_validation_loss": 0.03445044895691818
+    },
+    {
+      "learning_rate": 0.003,
+      "uygun": true,
+      "aktivasyon_sayisi": 6,
+      "mean_final_validation_accuracy": 0.6868,
+      "std_final_validation_accuracy": 0.2626937887858536,
+      "mean_final_validation_loss": 0.9001461322257915,
+      "std_final_validation_loss": 0.6506464841418943
+    }
+  ],
+  "secilen_learning_rate": 0.001,
+  "tamamlanan_kosu": 24,
+  "kararsiz_kosu": 0
+}

@@ -1,0 +1,58 @@
+{
+  "mimari": "resnet18_cifar",
+  "veri_seti": "cifar10",
+  "kombinasyon_sayisi": 6,
+  "toplam_kosu": 18,
+  "seeds": [
+    101,
+    202,
+    303
+  ],
+  "secili_kombinasyonlar": [
+    {
+      "optimizer": "adam",
+      "activation": "gelu",
+      "roller": [
+        "genel_performans_en_yuksek",
+        "etkilesim_2x2_kontrol"
+      ]
+    },
+    {
+      "optimizer": "adamw",
+      "activation": "gelu",
+      "roller": [
+        "en_hizli_yakinsama"
+      ]
+    },
+    {
+      "optimizer": "sgd",
+      "activation": "relu",
+      "roller": [
+        "genel_performans_en_dusuk_gecerli",
+        "en_yavas_yakinsama_gecerli"
+      ]
+    },
+    {
+      "optimizer": "momentum_sgd",
+      "activation": "elu",
+      "roller": [
+        "en_guclu_pozitif_aktivasyon_optimizer_etkilesimi"
+      ]
+    },
+    {
+      "optimizer": "adam",
+      "activation": "elu",
+      "roller": [
+        "etkilesim_2x2_karsit_kol"
+      ]
+    },
+    {
+      "optimizer": "momentum_sgd",
+      "activation": "gelu",
+      "roller": [
+        "etkilesim_2x2_kontrol"
+      ]
+    }
+  ],
+  "frozen_config_sha256": "04b67274ffe47882e33a7efdde0aed4e64963f5874693bc36d2d51ffaa7db744"
+}

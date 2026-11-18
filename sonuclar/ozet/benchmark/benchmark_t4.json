@@ -1,0 +1,80 @@
+{
+  "amac": "Tez ana deneyleri oncesi Colab T4 kapasite benchmarki",
+  "bilimsel_sonuc_degil": true,
+  "ortam": {
+    "git_commit": "74a46c1630060c45e9dca362256e3b8eb1739430",
+    "gpu": "Tesla T4",
+    "nvidia_smi": "Tesla T4, 580.82.07, 15360 MiB, 13658 MiB",
+    "python": "3.13.15",
+    "pytorch": "2.11.0+cu130",
+    "cuda": "13.0",
+    "cudnn": 92700,
+    "batch_size": 128,
+    "num_workers": 0,
+    "seed": 42
+  },
+  "benchmark": [
+    {
+      "model": "cnn_v1",
+      "warmup_epoch": 1,
+      "olcum_epoch": 3,
+      "train_seconds": [
+        24.842657748000022,
+        24.35378109300001,
+        24.404212416999997
+      ],
+      "validation_seconds": [
+        1.4960622790000002,
+        1.3976947570000107,
+        1.4059955620000437
+      ],
+      "total_seconds_per_epoch": [
+        26.338720027000022,
+        25.75147585000002,
+        25.81020797900004
+      ],
+      "mean_train_seconds": 24.53355041933334,
+      "mean_validation_seconds": 1.4332508660000183,
+      "mean_total_seconds_per_epoch": 25.96680128533336,
+      "std_total_seconds_per_epoch": 0.26407704500316237,
+      "peak_gpu_memory_mb": 355.27783203125,
+      "last_train_accuracy": 0.4307111111111111,
+      "last_validation_accuracy": 0.4554
+    },
+    {
+      "model": "resnet18",
+      "warmup_epoch": 1,
+      "olcum_epoch": 3,
+      "train_seconds": [
+        70.47606176900001,
+        69.96203504300001,
+        69.43403388499996
+      ],
+      "validation_seconds": [
+        2.500012804999983,
+        2.4817377790000137,
+        2.4398744239999814
+      ],
+      "total_seconds_per_epoch": [
+        72.976074574,
+        72.44377282200003,
+        71.87390830899994
+      ],
+      "mean_train_seconds": 69.957376899,
+      "mean_validation_seconds": 2.4738750026666594,
+      "mean_total_seconds_per_epoch": 72.43125190166666,
+      "std_total_seconds_per_epoch": 0.45004458965050453,
+      "peak_gpu_memory_mb": 742.9619140625,
+      "last_train_accuracy": 0.5213333333333333,
+      "last_validation_accuracy": 0.5538
+    }
+  ],
+  "kaba_kapasite_tahminleri": {
+    "lr_pilotu_60x30_gpu_saat": 12.98340064266668,
+    "wd_pilotu_45x30_gpu_saat": 9.73755048200001,
+    "cifar10_ana_150x100_gpu_saat": 108.19500535555567,
+    "cifar10_ana_300x100_gpu_saat": 216.39001071111133,
+    "resnet18_120x100_gpu_saat": 241.43750633888885,
+    "not": "MNIST, Animals-10 ve 5 Flower Types bu benchmark ile tahmin edilmemistir. Veri seti bazli benchmark yapilmadan 1.035 kosunun toplam suresi kesinlestirilmeyecektir."
+  }
+}
