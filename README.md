@@ -115,7 +115,3 @@ Not: `analiz/` notebook'u final test doğruluğu üzerinden ANOVA üretir. Tezde
 5. `dokumantasyon/16_lr_pilotu_entegrasyon_ve_gercek_pilot.md`
 6. `dokumantasyon/18_resnet18_secilmis_dogrulama.md`
 7. `teorik_analiz/01`–`06`
-
-## Yerel kurulum (Windows)
-
-`kurulum_windows.cmd` çalıştırılır, VS Code yorumlayıcısı olarak `.venv\Scripts\python.exe` seçilir ve altyapı testi `.venv\Scripts\python.exe calistir_duman_testi.py` ile yapılır. Ayrıntı: `dokumantasyon/07_windows_kurulum.md`. Tam deneyler GPU gerektirir; CPU üzerinde çalıştırılması önerilmez.
