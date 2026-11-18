@@ -49,14 +49,4 @@ Aşağıdaki noktalar tez önerisinin doğrudan cümleleri değildir. Deneyin ko
 - AULC gibi yakınsama ölçülerinin eklenmesi
 - Sonuçların GitHub üzerinde sürüm ve deney kimliğiyle izlenmesi
 
-Bu kararların hiçbiri tez önerisinin ana araştırma sorusunu değiştirmek amacıyla eklenmemiştir. Ana deney başlamadan önce gerekli olanlar danışmanla netleştirilip dondurulacaktır.
-
-## Şu anki aşama
-
-Tez önerisindeki çalışma takvimine paralel olarak şu anda:
-
-**veri setlerinin hazırlanması + deney ortamının oluşturulması + CNN mimarisinin geliştirilmesi/doğrulanması**
-
-aşamalarına karşılık gelen teknik altyapı kurulmaktadır.
-
-Henüz ana aktivasyon-optimizasyon deneyleri başlatılmamıştır.
+Bu kararların hiçbiri tez önerisinin ana araştırma sorusunu değiştirmez; tamamı ana deneylerden önce dondurulmuştur.
