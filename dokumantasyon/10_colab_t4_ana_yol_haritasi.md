@@ -157,39 +157,6 @@ Ana faktöriyel sonuçlarda:
 
 uygulanacaktır.
 
-## Aşama 9 — Tez üretimi
-
-Deney süreci devam ederken tez metni paralel geliştirilecektir.
-
-Ana bölümler:
-- giriş ve araştırma problemi
-- literatür
-- matematiksel / teorik analiz
-- materyal ve yöntem
-- deney tasarımı
-- bulgular
-- istatistiksel analiz
-- tartışma
-- sonuç ve öneriler
-- kaynakça
-- gerekli ekler
-
-Nihai biçim Van Yüzüncü Yıl Üniversitesi Fen Bilimleri Enstitüsü güncel tez şablonuna göre hazırlanacaktır.
-
-## Aşama 10 — Savunma paketi
-
-Sonuçlardan sonra:
-- tez PDF/DOCX
-- yüksek çözünürlüklü şekil ve çizelgeler
-- ana sonuç özeti
-- yöntem akış şeması
-- literatür farkı tablosu
-- teorik beklenti / deney bulgusu eşleştirmesi
-- 18–24 slaytlık savunma sunumu
-- olası jüri soruları için teknik kontrol listesi
-
-hazırlanacaktır.
-
 ## Geçiş kuralı
 
 Her aşamada:

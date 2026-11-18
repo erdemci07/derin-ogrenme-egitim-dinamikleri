@@ -78,5 +78,3 @@ ve seçilmiş kombinasyonlarda:
 - ResNet-18
 
 doğrulama deneyleri planlanacaktır.
-
-Bu aşamanın tam kapsamı ana deneylerden önce danışmanla netleştirilmelidir.
